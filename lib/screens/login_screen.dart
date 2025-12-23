@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'help_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -172,7 +173,7 @@ class _LoginScreenState extends State<LoginScreen> {
           Center(
             child: TextButton(
               onPressed: () {
-                // Handle help
+                HelpScreen.show(context);
               },
               child: Text(
                 'Bantuan ?',
