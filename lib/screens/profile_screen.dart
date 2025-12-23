@@ -282,28 +282,122 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  // Accent blue color from HTML design
+  static const Color accentBlue = Color(0xFF85B6D9);
+
+  // Class list data
+  final List<Map<String, String>> _classList = [
+    {
+      'title': 'Bahasa Inggris: Business and Scientific',
+      'code': 'D4SM-41-GAB1 [ARS]',
+      'date': 'Tanggal Mulai Monday, 8 February 2021',
+    },
+    {
+      'title': 'Desain Antarmuka & Pengalaman Pengguna',
+      'code': 'D4SM-42-03 [ADY]',
+      'date': 'Tanggal Mulai Monday, 8 February 2021',
+    },
+    {
+      'title': 'Kewarganegaraan',
+      'code': 'D4SM-41-GAB1 [BBO]. JUMAT 2',
+      'date': 'Tanggal Mulai Monday, 8 February 2021',
+    },
+    {
+      'title': 'Olah Raga D3TT-44-02 [EYR]',
+      'code': '',
+      'date': 'Tanggal Mulai Monday, 8 February 2021',
+    },
+    {
+      'title': 'Pemrograman Multimedia Interaktif',
+      'code': 'D4SM-43-04 [TPR]',
+      'date': 'Tanggal Mulai Monday, 8 February 2021',
+    },
+    {
+      'title': 'Pemrograman Perangkat Bergerak Multimedia',
+      'code': 'D4SM-41-GAB1 [APJ]',
+      'date': 'Tanggal Mulai Monday, 8 February 2021',
+    },
+    {
+      'title': 'Sistem Operasi D4SM-44-02 [DDS]',
+      'code': '',
+      'date': 'Tanggal Mulai Monday, 8 February 2021',
+    },
+  ];
+
   Widget _buildKelasContent(bool isDark) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          children: [
-            Icon(
-              Icons.school_outlined,
-              size: 64,
-              color: isDark ? Colors.grey[600] : Colors.grey[400],
+    return ListView.builder(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: _classList.length,
+      itemBuilder: (context, index) {
+        final classItem = _classList[index];
+        return _buildClassItem(classItem, isDark);
+      },
+    );
+  }
+
+  Widget _buildClassItem(Map<String, String> classItem, bool isDark) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Blue rectangle icon
+          Container(
+            width: 64,
+            height: 48,
+            margin: const EdgeInsets.only(top: 4),
+            decoration: BoxDecoration(
+              color: accentBlue,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.1),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
             ),
-            const SizedBox(height: 16),
-            Text(
-              'Daftar kelas Anda akan muncul di sini',
-              style: GoogleFonts.poppins(
-                fontSize: 14,
-                color: isDark ? Colors.grey[400] : Colors.grey[600],
-              ),
-              textAlign: TextAlign.center,
+          ),
+          const SizedBox(width: 16),
+          // Class info
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  classItem['title']!.toUpperCase(),
+                  style: GoogleFonts.poppins(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                    color: isDark ? Colors.white : Colors.grey[900],
+                    height: 1.3,
+                  ),
+                ),
+                if (classItem['code']!.isNotEmpty) ...[
+                  const SizedBox(height: 2),
+                  Text(
+                    classItem['code']!,
+                    style: GoogleFonts.poppins(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w400,
+                      color: isDark ? Colors.grey[300] : Colors.grey[600],
+                    ),
+                  ),
+                ],
+                const SizedBox(height: 4),
+                Text(
+                  classItem['date']!,
+                  style: GoogleFonts.poppins(
+                    fontSize: 10,
+                    color: isDark ? Colors.grey[400] : Colors.grey[500],
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
