@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'home_screen.dart';
+import 'profile_screen.dart';
+import 'notification_screen.dart';
 import 'announcement_detail_screen.dart';
 
 class AnnouncementScreen extends StatefulWidget {
@@ -235,7 +238,15 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
     final isSelected = _selectedNavIndex == index;
 
     return GestureDetector(
-      onTap: () => setState(() => _selectedNavIndex = index),
+      onTap: () {
+        if (index == 0) {
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+        } else if (index == 1) {
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const ProfileScreen()));
+        } else if (index == 2) {
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const NotificationScreen()));
+        }
+      },
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

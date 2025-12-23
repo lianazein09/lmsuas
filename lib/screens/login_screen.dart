@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'home_screen.dart';
 import 'help_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -309,7 +310,10 @@ class _LoginScreenState extends State<LoginScreen> {
       width: double.infinity,
       child: ElevatedButton(
         onPressed: () {
-          // Handle login
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const HomeScreen()),
+          );
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: primaryColor,

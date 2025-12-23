@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'home_screen.dart';
+import 'notification_screen.dart';
+import 'class_materials_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -755,7 +758,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final isSelected = _selectedNavIndex == index;
 
     return GestureDetector(
-      onTap: () => setState(() => _selectedNavIndex = index),
+      onTap: () {
+        if (index == 0) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const HomeScreen()),
+          );
+        } else if (index == 2) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const NotificationScreen()),
+          );
+        }
+      },
       child: SizedBox(
         width: 80,
         child: Column(

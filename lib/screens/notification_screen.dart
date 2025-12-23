@@ -51,29 +51,100 @@ class NotificationScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: backgroundColor,
-      body: Column(
+      body: Stack(
         children: [
-          // Header
-          _buildHeader(context, isDark, backgroundColor, textColor),
-          // Notification list
-          Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: _notifications.length,
-              itemBuilder: (context, index) {
-                return _buildNotificationItem(
-                  _notifications[index],
-                  isDark,
-                  textColor,
-                  subTextColor,
-                );
-              },
+          Column(
+            children: [
+              // Header
+              _buildHeader(context, isDark, backgroundColor, textColor),
+              // Notification list
+              Expanded(
+                child: ListView.builder(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
+                  itemCount: _notifications.length,
+                  itemBuilder: (context, index) {
+                    return _buildNotificationItem(
+                      _notifications[index],
+                      isDark,
+                      textColor,
+                      subTextColor,
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+          _buildBottomNav(context),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBottomNav(BuildContext context) {
+    return Positioned(
+      bottom: 0,
+      left: 0,
+      right: 0,
+      child: Container(
+        decoration: const BoxDecoration(
+          color: Color(0xFFB02E2E), // Using home's primary color for consistency
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(32),
+            topRight: Radius.circular(32),
+          ),
+        ),
+        child: SafeArea(
+          top: false,
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(24, 12, 24, 24),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _buildNavItem(context, Icons.home_rounded, 'Home', false, 0),
+                _buildNavItem(context, Icons.school_rounded, 'Kelas Saya', false, 1),
+                _buildNavItem(context, Icons.notifications_rounded, 'Notifikasi', true, 2),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNavItem(BuildContext context, IconData icon, String label, bool isSelected, int index) {
+    return GestureDetector(
+      onTap: () {
+        if (index == 0) {
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+        } else if (index == 1) {
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const ProfileScreen()));
+        }
+      },
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: isSelected ? Colors.white.withValues(alpha: 0.2) : Colors.transparent,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(icon, color: Colors.white, size: 24),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: GoogleFonts.inter(
+              fontSize: 10,
+              fontWeight: FontWeight.w700,
+              color: Colors.white.withValues(alpha: isSelected ? 1 : 0.7),
             ),
           ),
         ],
       ),
     );
   }
+}
 
   Widget _buildHeader(BuildContext context, bool isDark, Color backgroundColor, Color textColor) {
     return Container(

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'home_screen.dart';
+import 'profile_screen.dart';
+import 'notification_screen.dart';
+import 'material_detail_screen.dart';
 
 class ClassMaterialsScreen extends StatefulWidget {
   final String? className;
@@ -262,87 +266,98 @@ class _ClassMaterialsScreenState extends State<ClassMaterialsScreen> {
   }
 
   Widget _buildMaterialCard(Map<String, dynamic> material, bool isDark) {
-    final cardColor = isDark ? const Color(0xFF1E1E1E) : Colors.white;
     final textColor = isDark ? const Color(0xFFF3F4F6) : const Color(0xFF1F2937);
     final subTextColor = isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280);
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: cardColor,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: isDark ? Colors.grey[800]! : Colors.grey[100]!,
-          width: 1,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MaterialDetailScreen(
+              title: material['title'],
+            ),
           ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Meeting tag and status
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // Meeting tag
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: secondaryColor,
-                  borderRadius: BorderRadius.circular(8),
-                  boxShadow: [
-                    BoxShadow(
-                      color: secondaryColor.withValues(alpha: 0.3),
-                      blurRadius: 4,
-                      offset: const Offset(0, 2),
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 16),
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isDark ? Colors.grey[800]! : Colors.grey[100]!,
+            width: 1,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.03),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Meeting tag and status
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Meeting tag
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: secondaryColor,
+                    borderRadius: BorderRadius.circular(8),
+                    boxShadow: [
+                      BoxShadow(
+                        color: secondaryColor.withValues(alpha: 0.3),
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Text(
+                    material['meeting'],
+                    style: GoogleFonts.inter(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white,
                     ),
-                  ],
-                ),
-                child: Text(
-                  material['meeting'],
-                  style: GoogleFonts.inter(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
                   ),
                 ),
-              ),
-              // Status icon
-              Icon(
-                material['completed'] ? Icons.check_circle_rounded : Icons.radio_button_unchecked_rounded,
-                color: material['completed'] ? successColor : (isDark ? Colors.grey[600] : Colors.grey[300]),
-                size: 24,
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          // Title
-          Text(
-            material['title'],
-            style: GoogleFonts.inter(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: textColor,
+                // Status icon
+                Icon(
+                  material['completed'] ? Icons.check_circle_rounded : Icons.radio_button_unchecked_rounded,
+                  color: material['completed'] ? successColor : (isDark ? Colors.grey[600] : Colors.grey[300]),
+                  size: 24,
+                ),
+              ],
             ),
-          ),
-          const SizedBox(height: 8),
-          // Content description
-          Text(
-            material['content'],
-            style: GoogleFonts.inter(
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-              color: subTextColor,
+            const SizedBox(height: 12),
+            // Title
+            Text(
+              material['title'],
+              style: GoogleFonts.inter(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: textColor,
+              ),
             ),
-          ),
-        ],
+            const SizedBox(height: 8),
+            // Content description
+            Text(
+              material['content'],
+              style: GoogleFonts.inter(
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                color: subTextColor,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -715,7 +730,13 @@ class _ClassMaterialsScreenState extends State<ClassMaterialsScreen> {
     final isSelected = _selectedNavIndex == index;
 
     return GestureDetector(
-      onTap: () => setState(() => _selectedNavIndex = index),
+      onTap: () {
+        if (index == 0) {
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+        } else if (index == 2) {
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const NotificationScreen()));
+        }
+      },
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
