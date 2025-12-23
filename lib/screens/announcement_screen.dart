@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'announcement_detail_screen.dart';
 
 class AnnouncementScreen extends StatefulWidget {
   const AnnouncementScreen({super.key});
@@ -134,12 +135,21 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
     Color textColor,
     Color subTextColor,
   ) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-      ),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AnnouncementDetailScreen(announcement: announcement),
+          ),
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 8),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+        ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -183,6 +193,7 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
             ),
           ),
         ],
+      ),
       ),
     );
   }
