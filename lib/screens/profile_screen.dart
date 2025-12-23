@@ -402,29 +402,181 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  // Text controllers for edit profile form
+  final _firstNameController = TextEditingController(text: 'Dandy');
+  final _lastNameController = TextEditingController(text: 'Candra Pratama');
+  final _emailEditController = TextEditingController(text: 'dandy.cp@example.com');
+  final _countryController = TextEditingController(text: 'Indonesia');
+  final _descriptionController = TextEditingController();
+
   Widget _buildEditProfileContent(bool isDark) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          children: [
-            Icon(
-              Icons.edit_outlined,
-              size: 64,
-              color: isDark ? Colors.grey[600] : Colors.grey[400],
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Fitur edit profil akan segera hadir',
-              style: GoogleFonts.poppins(
-                fontSize: 14,
-                color: isDark ? Colors.grey[400] : Colors.grey[600],
+    final cardColor = isDark ? const Color(0xFF27272A) : Colors.white;
+    final borderColor = isDark ? const Color(0xFF52525B) : const Color(0xFF9CA3AF);
+    final labelColor = isDark ? Colors.grey[300] : Colors.grey[700];
+    final inputTextColor = isDark ? Colors.white : Colors.grey[900];
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Nama Pertama
+          _buildFormField(
+            label: 'Nama Pertama',
+            controller: _firstNameController,
+            placeholder: 'Dandy',
+            isDark: isDark,
+            cardColor: cardColor,
+            borderColor: borderColor,
+            labelColor: labelColor!,
+            inputTextColor: inputTextColor!,
+          ),
+          const SizedBox(height: 20),
+          // Nama Terakhir
+          _buildFormField(
+            label: 'Nama Terakhir',
+            controller: _lastNameController,
+            placeholder: 'Candra Pratama',
+            isDark: isDark,
+            cardColor: cardColor,
+            borderColor: borderColor,
+            labelColor: labelColor,
+            inputTextColor: inputTextColor,
+          ),
+          const SizedBox(height: 20),
+          // E-mail Address
+          _buildFormField(
+            label: 'E-mail Address',
+            controller: _emailEditController,
+            placeholder: 'dandy.cp@example.com',
+            isDark: isDark,
+            cardColor: cardColor,
+            borderColor: borderColor,
+            labelColor: labelColor,
+            inputTextColor: inputTextColor,
+            keyboardType: TextInputType.emailAddress,
+          ),
+          const SizedBox(height: 20),
+          // Negara
+          _buildFormField(
+            label: 'Negara',
+            controller: _countryController,
+            placeholder: 'Indonesia',
+            isDark: isDark,
+            cardColor: cardColor,
+            borderColor: borderColor,
+            labelColor: labelColor,
+            inputTextColor: inputTextColor,
+          ),
+          const SizedBox(height: 20),
+          // Deskripsi
+          _buildFormField(
+            label: 'Deskripsi',
+            controller: _descriptionController,
+            placeholder: 'Tulis deskripsi diri anda...',
+            isDark: isDark,
+            cardColor: cardColor,
+            borderColor: borderColor,
+            labelColor: labelColor,
+            inputTextColor: inputTextColor,
+            maxLines: 4,
+          ),
+          const SizedBox(height: 24),
+          // Simpan button
+          Align(
+            alignment: Alignment.centerRight,
+            child: ElevatedButton(
+              onPressed: () {
+                // Handle save
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      'Profil berhasil disimpan!',
+                      style: GoogleFonts.poppins(),
+                    ),
+                    backgroundColor: primaryColor,
+                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: isDark ? const Color(0xFF27272A) : const Color(0xFFF3F4F6),
+                foregroundColor: isDark ? Colors.white : Colors.grey[900],
+                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                elevation: 2,
               ),
-              textAlign: TextAlign.center,
+              child: Text(
+                'Simpan',
+                style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
+    );
+  }
+
+  Widget _buildFormField({
+    required String label,
+    required TextEditingController controller,
+    required String placeholder,
+    required bool isDark,
+    required Color cardColor,
+    required Color borderColor,
+    required Color labelColor,
+    required Color inputTextColor,
+    TextInputType keyboardType = TextInputType.text,
+    int maxLines = 1,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: GoogleFonts.poppins(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: labelColor,
+          ),
+        ),
+        const SizedBox(height: 6),
+        TextField(
+          controller: controller,
+          keyboardType: keyboardType,
+          maxLines: maxLines,
+          style: GoogleFonts.poppins(
+            fontSize: 14,
+            color: inputTextColor,
+          ),
+          decoration: InputDecoration(
+            hintText: placeholder,
+            hintStyle: GoogleFonts.poppins(
+              fontSize: 14,
+              color: isDark ? Colors.grey[500] : Colors.grey[400],
+            ),
+            filled: true,
+            fillColor: cardColor,
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: borderColor),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(color: borderColor),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: primaryColor, width: 2),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
