@@ -764,6 +764,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
             context,
             MaterialPageRoute(builder: (context) => const HomeScreen()),
           );
+        } else if (index == 1) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const ClassMaterialsScreen()),
+          );
         } else if (index == 2) {
           Navigator.pushReplacement(
             context,

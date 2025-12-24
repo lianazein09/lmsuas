@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'home_screen.dart';
+import 'profile_screen.dart';
+import 'class_materials_screen.dart';
+import 'announcement_screen.dart';
 
 class NotificationScreen extends StatelessWidget {
   const NotificationScreen({super.key});
@@ -117,7 +121,7 @@ class NotificationScreen extends StatelessWidget {
         if (index == 0) {
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
         } else if (index == 1) {
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const ProfileScreen()));
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const ClassMaterialsScreen()));
         }
       },
       child: Column(
@@ -126,7 +130,7 @@ class NotificationScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: isSelected ? Colors.white.withValues(alpha: 0.2) : Colors.transparent,
+              color: isSelected ? Colors.white.withOpacity(0.2) : Colors.transparent,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(icon, color: Colors.white, size: 24),
@@ -137,22 +141,21 @@ class NotificationScreen extends StatelessWidget {
             style: GoogleFonts.inter(
               fontSize: 10,
               fontWeight: FontWeight.w700,
-              color: Colors.white.withValues(alpha: isSelected ? 1 : 0.7),
+              color: Colors.white.withOpacity(isSelected ? 1 : 0.7),
             ),
           ),
         ],
       ),
     );
   }
-}
 
   Widget _buildHeader(BuildContext context, bool isDark, Color backgroundColor, Color textColor) {
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 48, 16, 16),
       decoration: BoxDecoration(
         color: isDark 
-            ? backgroundColor.withValues(alpha: 0.95) 
-            : backgroundColor.withValues(alpha: 0.95),
+            ? backgroundColor.withOpacity(0.95) 
+            : backgroundColor.withOpacity(0.95),
         border: Border(
           bottom: BorderSide(
             color: isDark ? Colors.grey[800]! : Colors.grey[100]!,
@@ -187,8 +190,21 @@ class NotificationScreen extends StatelessWidget {
               ),
             ),
           ),
-          // Placeholder for symmetry
-          const SizedBox(width: 48),
+          // Announcement button
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AnnouncementScreen()),
+              );
+            },
+            icon: Icon(
+              Icons.campaign_outlined,
+              color: textColor,
+              size: 24,
+            ),
+            padding: const EdgeInsets.all(8),
+          ),
         ],
       ),
     );
@@ -203,8 +219,8 @@ class NotificationScreen extends StatelessWidget {
     final isDocument = notification['type'] == 'document';
     final iconColor = isDocument ? primaryColor : purpleColor;
     final iconBgColor = isDocument
-        ? (isDark ? primaryColor.withValues(alpha: 0.2) : const Color(0xFFEFF6FF))
-        : (isDark ? purpleColor.withValues(alpha: 0.2) : const Color(0xFFFAF5FF));
+        ? (isDark ? primaryColor.withOpacity(0.2) : const Color(0xFFEFF6FF))
+        : (isDark ? purpleColor.withOpacity(0.2) : const Color(0xFFFAF5FF));
 
     return Container(
       margin: const EdgeInsets.only(bottom: 8),

@@ -222,7 +222,7 @@ class _ClassMaterialsScreenState extends State<ClassMaterialsScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'Tugas Dan Kuis',
+                          'KUIS',
                           style: GoogleFonts.inter(
                             fontSize: 14,
                             fontWeight: _selectedTab == 1 ? FontWeight.w700 : FontWeight.w500,

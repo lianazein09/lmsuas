@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'announcement_screen.dart';
 import 'profile_screen.dart';
-import 'notification_screen.dart';
 import 'announcement_detail_screen.dart';
 import 'class_materials_screen.dart';
+import 'notification_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -99,38 +99,46 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           ),
-          Container(
-            padding: const EdgeInsets.fromLTRB(12, 4, 4, 4),
-            decoration: BoxDecoration(
-              color: Colors.black.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(30),
-              border: Border.all(color: Colors.white24),
-            ),
-            child: Row(
-              children: [
-                Text(
-                  'MAHASISWA',
-                  style: GoogleFonts.poppins(
-                    color: Colors.white,
-                    fontSize: 10,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 1.0,
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ProfileScreen()),
+              );
+            },
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(12, 4, 4, 4),
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(30),
+                border: Border.all(color: Colors.white24),
+              ),
+              child: Row(
+                children: [
+                  Text(
+                    'MAHASISWA',
+                    style: GoogleFonts.poppins(
+                      color: Colors.white,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 1.0,
+                    ),
                   ),
-                ),
-                const SizedBox(width: 8),
-                Container(
-                  padding: const EdgeInsets.all(6),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.2),
-                    shape: BoxShape.circle,
+                  const SizedBox(width: 8),
+                  Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.2),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.person_rounded,
+                      color: Colors.white,
+                      size: 18,
+                    ),
                   ),
-                  child: const Icon(
-                    Icons.person_rounded,
-                    color: Colors.white,
-                    size: 18,
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],
@@ -501,7 +509,6 @@ class _HomeScreenState extends State<HomeScreen> {
           border: Border.all(color: isDark ? Colors.white10 : Colors.grey[100]!),
         ),
         child: Row(
-          gap: 16,
           children: [
             Container(
               width: 64,
@@ -653,7 +660,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return GestureDetector(
       onTap: () {
         if (index == 1) {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => const ProfileScreen()));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => const ClassMaterialsScreen()));
         } else if (index == 2) {
           Navigator.push(context, MaterialPageRoute(builder: (context) => const NotificationScreen()));
         }
@@ -667,7 +674,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: isSelected ? Colors.white.withValues(alpha: 0.2) : Colors.transparent,
+                  color: isSelected ? Colors.white.withOpacity(0.2) : Colors.transparent,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
@@ -698,7 +705,7 @@ class _HomeScreenState extends State<HomeScreen> {
             style: GoogleFonts.poppins(
               fontSize: 10,
               fontWeight: FontWeight.w700,
-              color: Colors.white.withValues(alpha: isSelected ? 1 : 0.7),
+              color: Colors.white.withOpacity(isSelected ? 1 : 0.7),
               letterSpacing: 0.5,
             ),
           ),
