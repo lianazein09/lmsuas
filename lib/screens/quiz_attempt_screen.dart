@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'quiz_review_answer_screen.dart';
 
 class QuizAttemptScreen extends StatefulWidget {
   final String title;
@@ -156,12 +157,24 @@ class _QuizAttemptScreenState extends State<QuizAttemptScreen> {
                             }),
                           ),
                         ),
-                      if (currentIndex < 14)
-                        Expanded(
-                          child: _buildNavButton('Soal Selanjut nya.', isDark, () {
-                            setState(() => currentIndex++);
-                          }),
+                      Expanded(
+                        child: _buildNavButton(
+                          currentIndex < 14 ? 'Soal Selanjut nya.' : 'Selesai & Review',
+                          isDark,
+                          () {
+                            if (currentIndex < 14) {
+                              setState(() => currentIndex++);
+                            } else {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const QuizReviewAnswerScreen(),
+                                ),
+                              );
+                            }
+                          },
                         ),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 32),
