@@ -65,23 +65,25 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
 
     return Scaffold(
       backgroundColor: backgroundColor,
-      body: Column(
-        children: [
-          // Handle bar
-          _buildHandleBar(isDark, backgroundColor),
-          // Header
-          _buildHeader(textColor),
-          // Description
-          _buildDescription(secondaryTextColor),
-          // Tab bar
-          _buildTabBar(isDark, textColor),
-          // Content
-          Expanded(
-            child: _selectedTab == 0
+      body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          children: [
+            // Handle bar
+            _buildHandleBar(isDark, backgroundColor),
+            // Header
+            _buildHeader(textColor),
+            // Description
+            _buildDescription(secondaryTextColor),
+            // Tab bar
+            _buildTabBar(isDark, textColor),
+            // Content
+            _selectedTab == 0
                 ? _buildAttachmentsList(isDark)
                 : _buildTugasContent(isDark),
-          ),
-        ],
+            const SizedBox(height: 48), // Bottom space
+          ],
+        ),
       ),
     );
   }
@@ -234,6 +236,8 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
       color: bgColor,
       child: ListView.builder(
         padding: const EdgeInsets.all(24),
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
         itemCount: _attachments.length,
         itemBuilder: (context, index) {
           return _buildAttachmentCard(_attachments[index], isDark);
