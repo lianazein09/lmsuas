@@ -15,8 +15,11 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
   int _selectedTab = 0; // 0: Lampiran Materi, 1: Tugas dan Kuis
 
   // Colors from the HTML design
-  static const Color primaryColor = Color(0xFF111827);
-  static const Color accentGreen = Color(0xFF10B981);
+  static const Color primaryColor = Color(0xFF13EC5B);
+  static const Color backgroundLight = Color(0xFFF6F8F6);
+  static const Color backgroundDark = Color(0xFF102216);
+  static const Color surfaceDark = Color(0xFF1A2E22);
+  static const Color accentGreen = Color(0xFF13EC5B);
 
   // Attachments data
   final List<Map<String, dynamic>> _attachments = [
@@ -50,67 +53,112 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
     },
   ];
 
+  // Assignments data
+  final List<Map<String, dynamic>> _assignmentsList = [
+    {
+      'type': 'quiz',
+      'title': 'Quiz Review 01',
+      'description': 'Review fundamental concepts of UI.',
+      'deadline': 'Deadline: Oct 24',
+      'completed': true,
+    },
+    {
+      'type': 'assignment',
+      'title': 'Tugas 01 - UID Android Mobile Game',
+      'description': 'Design the main menu for a mobile game.',
+      'deadline': 'Deadline: Oct 30',
+      'completed': false,
+      'isUrgent': true,
+    },
+    {
+      'type': 'note',
+      'title': 'Tugas 02 - Wireframing',
+      'description': 'Create low-fidelity wireframes.',
+      'deadline': 'Deadline: Nov 05',
+      'completed': false,
+    },
+  ];
+
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final backgroundColor = isDark ? const Color(0xFF1F2937) : Colors.white;
-    final textColor = isDark ? const Color(0xFFF9FAFB) : const Color(0xFF111827);
-    final secondaryTextColor = isDark ? const Color(0xFF9CA3AF) : const Color(0xFF4B5563);
+    final bgColor = isDark ? backgroundDark : backgroundLight;
+    final textColor = isDark ? Colors.white : const Color(0xFF0D1B12);
+    final secondaryTextColor = isDark ? const Color(0xFF9CA3AF) : const Color(0xFF0D1B12).withOpacity(0.8);
 
     return Scaffold(
-      backgroundColor: backgroundColor,
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Column(
-          children: [
-            // Handle bar
-            _buildHandleBar(isDark, backgroundColor),
-            // Header
-            _buildHeader(textColor),
-            // Description
-            _buildDescription(secondaryTextColor),
-            // Tab bar
-            _buildTabBar(isDark, textColor),
-            // Content
-            _selectedTab == 0
-                ? _buildAttachmentsList(isDark)
-                : _buildTugasContent(isDark),
-            const SizedBox(height: 48), // Bottom space
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHandleBar(bool isDark, Color backgroundColor) {
-    return Container(
-      padding: const EdgeInsets.only(top: 16, bottom: 8),
-      color: backgroundColor,
-      width: double.infinity,
-      child: Center(
-        child: Container(
-          width: 64,
-          height: 6,
-          decoration: BoxDecoration(
-            color: isDark ? const Color(0xFF4B5563) : const Color(0xFFD1D5DB),
-            borderRadius: BorderRadius.circular(3),
+      backgroundColor: bgColor,
+      body: Column(
+        children: [
+          // App Bar
+          _buildAppBar(context, isDark, textColor),
+          // Scrollable Content
+          Expanded(
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Headline Section
+                  _buildHeadline(textColor),
+                  // Description
+                  _buildDescription(secondaryTextColor),
+                  // Tab bar
+                  _buildTabBar(isDark, textColor),
+                  // Content
+                  _selectedTab == 0
+                      ? _buildAttachmentsList(isDark)
+                      : _buildTugasContent(isDark),
+                  const SizedBox(height: 48), // Bottom space
+                ],
+              ),
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
 
-  Widget _buildHeader(Color textColor) {
+  Widget _buildAppBar(BuildContext context, bool isDark, Color textColor) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(16, 48, 16, 8),
+      color: Colors.transparent,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          IconButton(
+            onPressed: () => Navigator.of(context).pop(),
+            icon: const Icon(Icons.arrow_back),
+            color: textColor,
+            style: IconButton.styleFrom(
+              padding: const EdgeInsets.all(8),
+            ),
+          ),
+          Text(
+            'Course Details',
+            style: GoogleFonts.lexend(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: textColor,
+            ),
+          ),
+          const SizedBox(width: 48), // Placeholder for symmetry
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeadline(Color textColor) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
+      padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
       child: Text(
-        widget.title ?? 'Pengantar User Interface Design',
-        textAlign: TextAlign.center,
-        style: GoogleFonts.inter(
-          fontSize: 20,
-          fontWeight: FontWeight.w700,
+        widget.title ?? 'Konsep User Interface Design',
+        style: GoogleFonts.lexend(
+          fontSize: 28,
+          fontWeight: FontWeight.bold,
           color: textColor,
-          height: 1.3,
+          height: 1.2,
+          letterSpacing: -0.5,
         ),
       ),
     );
@@ -118,30 +166,16 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
 
   Widget _buildDescription(Color secondaryTextColor) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Deskripsi',
-            style: GoogleFonts.inter(
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
-              color: secondaryTextColor,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            widget.description ?? 
-                'Antarmuka yang dibangun harus memperhatikan prinsip-prinsip desain yang ada. Hal ini diharapkan agar antarmuka yang dibangun bukan hanya menarik secara visual tetapi dengan memperhatikan kaidah-kaidah prinsip desain diharapkan akan mendukung pengguna dalam menggunakan produk secara baik. Pelajaran mengenai prinsip UID ini sudah pernah diajarkan dalam mata kuliah Implementasi Desain Antarmuka Pengguna tetap pada matakuliah ini akan direview kembali sehingga dapat menjadi bekal saat memasukki materi mengenai User Experience.',
-            textAlign: TextAlign.justify,
-            style: GoogleFonts.inter(
-              fontSize: 12,
-              color: secondaryTextColor,
-              height: 1.6,
-            ),
-          ),
-        ],
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+      child: Text(
+        widget.description ?? 
+            'User Interface Design focuses on anticipating what users might need to do and ensuring that the interface has elements that are easy to access, understand, and use to facilitate those actions.',
+        style: GoogleFonts.lexend(
+          fontSize: 16,
+          color: secondaryTextColor,
+          height: 1.5,
+          fontWeight: FontWeight.w400,
+        ),
       ),
     );
   }
@@ -152,10 +186,10 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
 
     return Container(
       decoration: BoxDecoration(
-        color: bgColor,
+        color: Colors.transparent,
         border: Border(
           bottom: BorderSide(
-            color: isDark ? const Color(0xFF1F2937) : const Color(0xFFF3F4F6),
+            color: isDark ? const Color(0xFF374151) : const Color(0xFFCFE7D7),
             width: 1,
           ),
         ),
@@ -203,9 +237,9 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
               Text(
                 label,
                 textAlign: TextAlign.center,
-                style: GoogleFonts.inter(
+                style: GoogleFonts.lexend(
                   fontSize: 14,
-                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
                   color: isSelected ? textColor : inactiveColor,
                 ),
               ),
@@ -213,14 +247,12 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
                 Positioned(
                   bottom: -16,
                   child: Container(
-                    width: 64,
-                    height: 4,
+                    width: double.infinity,
+                    height: 3,
+                    margin: const EdgeInsets.symmetric(horizontal: 20),
                     decoration: BoxDecoration(
                       color: isDark ? Colors.white : primaryColor,
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(4),
-                        topRight: Radius.circular(4),
-                      ),
+                      borderRadius: BorderRadius.circular(2),
                     ),
                   ),
                 ),
@@ -232,12 +264,10 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
   }
 
   Widget _buildAttachmentsList(bool isDark) {
-    final bgColor = isDark ? Colors.transparent : const Color(0xFFF9FAFB).withValues(alpha: 0.5);
-
     return Container(
-      color: bgColor,
+      padding: const EdgeInsets.all(20),
       child: ListView.builder(
-        padding: const EdgeInsets.all(24),
+        padding: EdgeInsets.zero,
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemCount: _attachments.length,
@@ -285,9 +315,16 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: cardColor,
+        color: isDark ? surfaceDark : Colors.white,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: borderColor),
+        shadows: isDark ? null : [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Row(
         children: [
@@ -309,7 +346,7 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
               children: [
                 Text(
                   attachment['title'],
-                  style: GoogleFonts.inter(
+                  style: GoogleFonts.lexend(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
                     color: textColor,
@@ -320,7 +357,7 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
                 const SizedBox(height: 2),
                 Text(
                   '${attachment['size']} • ${attachment['time']}',
-                  style: GoogleFonts.inter(
+                  style: GoogleFonts.lexend(
                     fontSize: 12,
                     color: secondaryTextColor,
                   ),
@@ -341,36 +378,176 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
   }
 
   Widget _buildTugasContent(bool isDark) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(32, 48, 32, 80),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          // Illustration from HTML
-          Container(
-            width: 256,
-            height: 256,
-            margin: const EdgeInsets.only(bottom: 24),
-            child: Image.network(
-              'https://lh3.googleusercontent.com/aida-public/AB6AXuBXtzoT9TSVNsyoAS2wd7onrU0KjfS_70pKlCHa7brimZN9Qmo0urPM2NewUqEXO_7keFyKg5rQKny1wDbfw17qjTwo3lTvQtFHKWN-_EfmLaqSQs_8UF-UxXjotMk9pduceMrYLi8J0XfAixSFYSdHzqBEkpLTZJT6Z3Qrl5oGyulfOObeA8nQwMb4zMfCfpHvijlaT8uLwQytRB44rLMdfqBgFrh2Ph54dqfjI81yoZdB_ctBHiK1bx2x57AcIBoa2rmkv1JiRfmI',
-              fit: BoxFit.contain,
-              errorBuilder: (_, __, ___) => Icon(
-                Icons.assignment_outlined,
-                size: 64,
-                color: isDark ? Colors.grey[600] : Colors.grey[400],
+    if (_assignmentsList.isEmpty) {
+      return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.fromLTRB(32, 48, 32, 80),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Illustration from HTML
+            Container(
+              width: 256,
+              height: 256,
+              margin: const EdgeInsets.only(bottom: 24),
+              child: Image.network(
+                'https://lh3.googleusercontent.com/aida-public/AB6AXuBXtzoT9TSVNsyoAS2wd7onrU0KjfS_70pKlCHa7brimZN9Qmo0urPM2NewUqEXO_7keFyKg5rQKny1wDbfw17qjTwo3lTvQtFHKWN-_EfmLaqSQs_8UF-UxXjotMk9pduceMrYLi8J0XfAixSFYSdHzqBEkpLTZJT6Z3Qrl5oGyulfOObeA8nQwMb4zMfCfpHvijlaT8uLwQytRB44rLMdfqBgFrh2Ph54dqfjI81yoZdB_ctBHiK1bx2x57AcIBoa2rmkv1JiRfmI',
+                fit: BoxFit.contain,
+                errorBuilder: (_, __, ___) => Icon(
+                  Icons.assignment_outlined,
+                  size: 64,
+                  color: isDark ? Colors.grey[600] : Colors.grey[400],
+                ),
               ),
             ),
+            Text(
+              'Tidak Ada Tugas Dan Kuis Hari Ini',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.lexend(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: isDark ? Colors.white : const Color(0xFF111827),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Container(
+      padding: const EdgeInsets.all(20),
+      child: ListView.builder(
+        padding: EdgeInsets.zero,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: _assignmentsList.length,
+        itemBuilder: (context, index) {
+          return _buildAssignmentCardItem(_assignmentsList[index], isDark);
+        },
+      ),
+    );
+  }
+
+  Widget _buildAssignmentCardItem(Map<String, dynamic> assignment, bool isDark) {
+    final textColor = isDark ? Colors.white : const Color(0xFF0D1B12);
+    final secondaryTextColor = isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280);
+    final isCompleted = assignment['completed'] == true;
+    final isUrgent = assignment['isUrgent'] == true;
+
+    // Icon based on type
+    IconData icon;
+    Color iconBgColor;
+    Color iconColor;
+
+    switch (assignment['type']) {
+      case 'quiz':
+        icon = Icons.quiz_rounded;
+        iconColor = primaryColor;
+        iconBgColor = isDark ? const Color(0xFF1E3A29) : const Color(0xFFE7F3EB);
+        break;
+      case 'assignment':
+        icon = Icons.assignment_rounded;
+        iconColor = isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280);
+        iconBgColor = isDark ? const Color(0xFF1F2937) : const Color(0xFFF3F4F6);
+        break;
+      case 'note':
+        icon = Icons.sticky_note_2_rounded;
+        iconColor = isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280);
+        iconBgColor = isDark ? const Color(0xFF1F2937) : const Color(0xFFF3F4F6);
+        break;
+      default:
+        icon = Icons.assignment_rounded;
+        iconColor = primaryColor;
+        iconBgColor = isDark ? const Color(0xFF1E3A29) : const Color(0xFFE7F3EB);
+    }
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: isDark ? surfaceDark : Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: isDark ? const Color(0xFF1F2937) : const Color(0xFFF3F4F6)),
+        shadows: isDark ? null : [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
           ),
-          Text(
-            'Tidak Ada Tugas Dan Kuis Hari Ini',
-            textAlign: TextAlign.center,
-            style: GoogleFonts.inter(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              color: isDark ? Colors.white : const Color(0xFF111827),
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Icon
+          Container(
+            width: 48,
+            height: 48,
+            decoration: BoxDecoration(
+              color: iconBgColor,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(icon, color: iconColor, size: 24),
+          ),
+          const SizedBox(width: 16),
+          // Info
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  assignment['title'],
+                  style: GoogleFonts.lexend(
+                    fontSize: 16,
+                    fontWeight: FontWeight.semibold,
+                    color: textColor,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  assignment['description'],
+                  style: GoogleFonts.lexend(
+                    fontSize: 14,
+                    color: secondaryTextColor,
+                    height: 1.3,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  assignment['deadline'],
+                  style: GoogleFonts.lexend(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    color: isUrgent ? Colors.red[400] : (isCompleted ? primaryColor : secondaryTextColor),
+                  ),
+                ),
+              ],
             ),
           ),
+          const SizedBox(width: 8),
+          // Status
+          if (isCompleted)
+            Container(
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                color: primaryColor.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.check_circle_rounded, color: primaryColor, size: 24),
+            )
+          else
+            Container(
+              width: 24,
+              height: 24,
+              margin: const EdgeInsets.only(top: 4, right: 4),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: isDark ? const Color(0xFF374151) : const Color(0xFFD1D5DB),
+                  width: 2,
+                ),
+              ),
+            ),
         ],
       ),
     );
