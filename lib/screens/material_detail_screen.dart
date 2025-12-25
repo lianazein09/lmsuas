@@ -15,7 +15,8 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
   int _selectedTab = 0; // 0: Lampiran Materi, 1: Tugas dan Kuis
 
   // Colors from the HTML design
-  static const Color primaryColor = Color(0xFF10B981);
+  static const Color primaryColor = Color(0xFF111827);
+  static const Color accentGreen = Color(0xFF10B981);
 
   // Attachments data
   final List<Map<String, dynamic>> _attachments = [
@@ -90,15 +91,15 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
 
   Widget _buildHandleBar(bool isDark, Color backgroundColor) {
     return Container(
-      padding: const EdgeInsets.only(top: 48, bottom: 8),
+      padding: const EdgeInsets.only(top: 16, bottom: 8),
       color: backgroundColor,
       width: double.infinity,
       child: Center(
         child: Container(
-          width: 48,
+          width: 64,
           height: 6,
           decoration: BoxDecoration(
-            color: isDark ? Colors.grey[700] : Colors.grey[200],
+            color: isDark ? const Color(0xFF4B5563) : const Color(0xFFD1D5DB),
             borderRadius: BorderRadius.circular(3),
           ),
         ),
@@ -161,7 +162,7 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
         color: bgColor,
         border: Border(
           bottom: BorderSide(
-            color: isDark ? Colors.grey[800]! : Colors.grey[100]!,
+            color: isDark ? const Color(0xFF1F2937) : const Color(0xFFF3F4F6),
             width: 1,
           ),
         ),
@@ -169,62 +170,70 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
       child: Row(
         children: [
           // Lampiran Materi tab
-          Expanded(
-            child: GestureDetector(
-              onTap: () => setState(() => _selectedTab = 0),
-              child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                      color: _selectedTab == 0 
-                          ? (isDark ? Colors.white : Colors.black) 
-                          : Colors.transparent,
-                      width: 2,
-                    ),
-                  ),
-                ),
-                child: Text(
-                  'Lampiran Materi',
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.inter(
-                    fontSize: 14,
-                    fontWeight: _selectedTab == 0 ? FontWeight.w600 : FontWeight.w500,
-                    color: _selectedTab == 0 ? textColor : inactiveColor,
-                  ),
-                ),
-              ),
-            ),
+          _buildTabItem(
+            label: 'Lampiran Materi',
+            index: 0,
+            isDark: isDark,
+            textColor: textColor,
+            inactiveColor: inactiveColor!,
           ),
           // Tugas dan Kuis tab
-          Expanded(
-            child: GestureDetector(
-              onTap: () => setState(() => _selectedTab = 1),
-              child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                      color: _selectedTab == 1 
-                          ? (isDark ? Colors.white : Colors.black) 
-                          : Colors.transparent,
-                      width: 2,
+          _buildTabItem(
+            label: 'Tugas dan Kuis',
+            index: 1,
+            isDark: isDark,
+            textColor: textColor,
+            inactiveColor: inactiveColor,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTabItem({
+    required String label,
+    required int index,
+    required bool isDark,
+    required Color textColor,
+    required Color inactiveColor,
+  }) {
+    final isSelected = _selectedTab == index;
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => setState(() => _selectedTab = index),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          color: Colors.transparent,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Text(
+                label,
+                textAlign: TextAlign.center,
+                style: GoogleFonts.inter(
+                  fontSize: 14,
+                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                  color: isSelected ? textColor : inactiveColor,
+                ),
+              ),
+              if (isSelected)
+                Positioned(
+                  bottom: -16,
+                  child: Container(
+                    width: 64,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: isDark ? Colors.white : primaryColor,
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(4),
+                        topRight: Radius.circular(4),
+                      ),
                     ),
                   ),
                 ),
-                child: Text(
-                  'Tugas dan Kuis',
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.inter(
-                    fontSize: 14,
-                    fontWeight: _selectedTab == 1 ? FontWeight.w600 : FontWeight.w500,
-                    color: _selectedTab == 1 ? textColor : inactiveColor,
-                  ),
-                ),
-              ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -323,7 +332,7 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
             width: 24,
             height: 24,
             decoration: BoxDecoration(
-              color: attachment['completed'] ? primaryColor : (isDark ? Colors.grey[600] : Colors.grey[300]),
+              color: attachment['completed'] ? accentGreen : (isDark ? Colors.grey[600] : Colors.grey[300]),
               shape: BoxShape.circle,
             ),
             child: const Icon(
@@ -338,28 +347,37 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
   }
 
   Widget _buildTugasContent(bool isDark) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.assignment_outlined,
-              size: 64,
-              color: isDark ? Colors.grey[600] : Colors.grey[400],
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Tidak ada tugas dan kuis untuk materi ini',
-              style: GoogleFonts.inter(
-                fontSize: 14,
-                color: isDark ? Colors.grey[400] : Colors.grey[600],
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(32, 48, 32, 80),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Illustration from HTML
+          Container(
+            width: 256,
+            height: 256,
+            margin: const EdgeInsets.only(bottom: 24),
+            child: Image.network(
+              'https://lh3.googleusercontent.com/aida-public/AB6AXuBXtzoT9TSVNsyoAS2wd7onrU0KjfS_70pKlCHa7brimZN9Qmo0urPM2NewUqEXO_7keFyKg5rQKny1wDbfw17qjTwo3lTvQtFHKWN-_EfmLaqSQs_8UF-UxXjotMk9pduceMrYLi8J0XfAixSFYSdHzqBEkpLTZJT6Z3Qrl5oGyulfOObeA8nQwMb4zMfCfpHvijlaT8uLwQytRB44rLMdfqBgFrh2Ph54dqfjI81yoZdB_ctBHiK1bx2x57AcIBoa2rmkv1JiRfmI',
+              fit: BoxFit.contain,
+              errorBuilder: (_, __, ___) => Icon(
+                Icons.assignment_outlined,
+                size: 64,
+                color: isDark ? Colors.grey[600] : Colors.grey[400],
               ),
-              textAlign: TextAlign.center,
             ),
-          ],
-        ),
+          ),
+          Text(
+            'Tidak Ada Tugas Dan Kuis Hari Ini',
+            textAlign: TextAlign.center,
+            style: GoogleFonts.inter(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: isDark ? Colors.white : const Color(0xFF111827),
+            ),
+          ),
+        ],
       ),
     );
   }
