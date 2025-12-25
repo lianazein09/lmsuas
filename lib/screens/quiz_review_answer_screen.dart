@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'quiz_question_review_detail_screen.dart';
 
 class QuizReviewAnswerScreen extends StatelessWidget {
   const QuizReviewAnswerScreen({super.key});
@@ -268,7 +269,18 @@ class QuizReviewAnswerScreen extends StatelessWidget {
                       ),
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => QuizQuestionReviewDetailScreen(
+                              questionNumber: int.parse(data['num']!),
+                              question: data['q']!,
+                              selectedAnswer: data['ans']!,
+                            ),
+                          ),
+                        );
+                      },
                       style: TextButton.styleFrom(
                         padding: EdgeInsets.zero,
                         minimumSize: Size.zero,
