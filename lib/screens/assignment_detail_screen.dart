@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'upload_file_screen.dart';
 
 class AssignmentDetailScreen extends StatelessWidget {
   final String title;
@@ -74,7 +75,14 @@ class AssignmentDetailScreen extends StatelessWidget {
                   maxWidth: 320,
                   height: 48,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const UploadFileScreen(),
+                        ),
+                      );
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: isDark ? const Color(0xFF374151) : const Color(0xFFE5E7EB),
                       foregroundColor: isDark ? Colors.white : const Color(0xFF1F2937),
