@@ -42,18 +42,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
       backgroundColor: backgroundColor,
       body: Stack(
         children: [
-          Column(
-            children: [
-              // Header with profile
-              _buildHeader(context),
-              // Main content
-              Expanded(
-                child: Transform.translate(
+          SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Column(
+              children: [
+                // Header with profile
+                _buildHeader(context),
+                // Main content
+                Transform.translate(
                   offset: const Offset(0, -56),
-                  child: _buildMainContent(isDark, cardColor),
+                  child: _buildMainContent(isDark),
                 ),
-              ),
-            ],
+                const SizedBox(height: 100), // Space for bottom nav
+              ],
+            ),
           ),
           // Bottom navigation
           Positioned(
@@ -160,11 +162,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildMainContent(bool isDark, Color cardColor) {
+  Widget _buildMainContent(bool isDark) {
     final textSecondaryColor = isDark ? const Color(0xFFA0A0A0) : const Color(0xFF666666);
+    final cardColor = isDark ? const Color(0xFF1E1E1E) : Colors.white;
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(24, 0, 24, 120),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
