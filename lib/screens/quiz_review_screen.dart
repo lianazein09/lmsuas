@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'quiz_attempt_screen.dart';
 
 class QuizReviewScreen extends StatelessWidget {
   final String title;
@@ -57,9 +58,18 @@ class QuizReviewScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 32),
-            _buildActionButton('Ambil Kuis', isDark),
+            _buildActionButton('Ambil Kuis', isDark, () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => QuizAttemptScreen(title: title),
+                ),
+              );
+            }),
             const SizedBox(height: 12),
-            _buildActionButton('Kembali Ke Kelas', isDark),
+            _buildActionButton('Kembali Ke Kelas', isDark, () {
+              Navigator.of(context).pop();
+            }),
             const SizedBox(height: 32),
           ],
         ),
@@ -260,12 +270,12 @@ class QuizReviewScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildActionButton(String label, bool isDark) {
+  Widget _buildActionButton(String label, bool isDark, VoidCallback onPressed) {
     return SizedBox(
       width: double.infinity,
       height: 48,
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: isDark ? surfaceDark : const Color(0xFFF3F4F6),
           foregroundColor: isDark ? Colors.white : const Color(0xFF1F2937),
