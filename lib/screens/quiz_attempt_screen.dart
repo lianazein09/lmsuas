@@ -18,8 +18,44 @@ class _QuizAttemptScreenState extends State<QuizAttemptScreen> {
   static const Color surfaceLight = Color(0xFFF6F6F6);
   static const Color surfaceDark = Color(0xFF2A2A2A);
 
-  int currentQuestion = 2;
-  String? selectedOption = 'C';
+  int currentIndex = 1; // Current displayed question index (0-14)
+  final Map<int, String?> _selectedAnswers = {0: 'A', 1: 'C'}; // Mock pre-selected answers
+
+  final List<String> _questions = [
+    'Radio button dapat digunakan untuk menentukan ?',
+    'Dalam perancangan web yang baik, untuk teks yang menyampaikan isi konten digunakan font yang sama di setiap halaman, ini merupakan salah satu tujuan yaitu ?',
+    'Apa fungsi utama dari User Experience (UX) design dalam pengembangan aplikasi?',
+    'Elemen visual manakah yang paling efektif untuk mengarahkan pandangan pengguna ke tombol CTA?',
+    'Prinsip "Affordance" dalam desain antarmuka merujuk pada?',
+    'Manakah dari berikut ini yang merupakan contoh dari "Dark Pattern" dalam desain UI?',
+    'Grid system dalam desain tata letak berfungsi untuk?',
+    'Apa yang dimaksud dengan "Responsive Design"?',
+    'Warna "Primary" dalam sebuah design system biasanya digunakan untuk?',
+    'Istilah "Whitespace" dalam desain antarmuka merujuk pada?',
+    'Fitts\'s Law dalam desain interaksi berkaitan dengan?',
+    'Apa kegunaan utama dari Wireframe dalam fase desain?',
+    'Manakah tipe navigasi yang paling umum untuk aplikasi mobile dengan banyak kategori?',
+    'Heuristic Evaluation adalah metode untuk?',
+    'Apa perbedaan utama antara UI dan UX?',
+  ];
+
+  final List<List<String>> _options = [
+    ['Jenis Kelamin', 'Alamat', 'Hobby', 'Riwayat Pendidikan', 'Umur'],
+    ['Intergrasi', 'Standarisasi', 'Konsistensi', 'Koefensi', 'Koreksi'],
+    ['Memperindah tampilan', 'Memastikan kemudahan penggunaan', 'Menambah fitur', 'Mempercepat coding', 'Mengurangi biaya'],
+    ['Warna kontras', 'Ukuran font kecil', 'Garis tipis', 'Warna pastel', 'Background transparan'],
+    ['Kecantikan visual', 'Petunjuk penggunaan objek', 'Kecepatan loading', 'Kapasitas storage', 'Harga aplikasi'],
+    ['Konfirmasi pembatalan', 'Notifikasi pembaruan', 'Biaya tersembunyi saat checkout', 'Panduan tutorial', 'Search bar'],
+    ['Menghemat memori', 'Menjaga keteraturan tata letak', 'Mempercepat render', 'Enkripsi data', 'Kompres gambar'],
+    ['Desain yang cepat', 'Desain yang menyesuaikan ukuran layar', 'Desain dengan banyak animasi', 'Desain yang murah', 'Desain tanpa gambar'],
+    ['Teks biasa', 'Elemen terpenting/utama', 'Background halaman', 'Border tipis', 'Logo perusahaan'],
+    ['Area tanpa konten', 'Warna putih saja', 'Latar belakang gambar', 'Teks berwarna putih', 'Margin luar'],
+    ['Waktu untuk mencapai target', 'Warna yang serasi', 'Ukuran gambar video', 'Jumlah klik menu', 'Keamanan password'],
+    ['Implementasi backend', 'Visual awal struktur halaman', 'Testing database', 'Publish ke store', 'Membuat animasi'],
+    ['Sidebar', 'Burger menu', 'Bottom navigation bar', 'Scroll horizontal', 'Tab bar'],
+    ['Menghitung biaya', 'Memeriksa usability berdasarkan aturan', 'Mencari bug kode', 'Menambah server', 'Membuat iklan'],
+    ['UI adalah rasa, UX adalah rupa', 'UI adalah rupa, UX adalah rasa', 'Tidak ada perbedaan', 'UI lebih penting', 'UX hanya untuk web'],
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +123,7 @@ class _QuizAttemptScreenState extends State<QuizAttemptScreen> {
                   _buildQuestionGrid(isDark),
                   const SizedBox(height: 32),
                   Text(
-                    'Soal Nomor $currentQuestion / 15',
+                    'Soal Nomor ${currentIndex + 1} / 15',
                     style: GoogleFonts.poppins(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -96,7 +132,7 @@ class _QuizAttemptScreenState extends State<QuizAttemptScreen> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Dalam perancangan web yang baik, untuk teks yang menyampaikan isi konten digunakan font yang sama di setiap halaman, ini merupakan salah satu tujuan yaitu ?',
+                    _questions[currentIndex],
                     style: GoogleFonts.inter(
                       fontSize: 16,
                       color: isDark ? const Color(0xFFD1D1D1) : const Color(0xFF1F2937),
@@ -104,21 +140,28 @@ class _QuizAttemptScreenState extends State<QuizAttemptScreen> {
                     ),
                   ),
                   const SizedBox(height: 40),
-                  _buildOption('A', 'Intergrasi', isDark),
-                  _buildOption('B', 'Standarisasi', isDark),
-                  _buildOption('C', 'Konsistensi', isDark),
-                  _buildOption('D', 'Koefensi', isDark),
-                  _buildOption('E', 'Koreksi', isDark),
+                  ...List.generate(5, (index) {
+                    final letter = String.fromCharCode(65 + index);
+                    return _buildOption(letter, _options[currentIndex][index], isDark);
+                  }),
                   const SizedBox(height: 48),
                   Row(
-                    gap: 16,
                     children: [
-                      Expanded(
-                        child: _buildNavButton('Soal Sebelum nya.', isDark),
-                      ),
-                      Expanded(
-                        child: _buildNavButton('Soal Selanjut nya.', isDark),
-                      ),
+                      if (currentIndex > 0)
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 16),
+                            child: _buildNavButton('Soal Sebelum nya.', isDark, () {
+                              setState(() => currentIndex--);
+                            }),
+                          ),
+                        ),
+                      if (currentIndex < 14)
+                        Expanded(
+                          child: _buildNavButton('Soal Selanjut nya.', isDark, () {
+                            setState(() => currentIndex++);
+                          }),
+                        ),
                     ],
                   ),
                   const SizedBox(height: 32),
@@ -152,26 +195,34 @@ class _QuizAttemptScreenState extends State<QuizAttemptScreen> {
   }
 
   Widget _buildGridItem(int number, bool isDark) {
-    final bool isCompleted = number == 1; // Match HTML where 1 is success
-    return Container(
-      width: 36,
-      height: 36,
-      decoration: BoxDecoration(
-        color: isCompleted ? successColor : (isDark ? surfaceDark : Colors.white),
-        shape: BoxShape.circle,
-        boxShadow: isCompleted ? [const BoxShadow(color: Colors.black12, blurRadius: 4)] : null,
-        border: !isCompleted ? Border.all(
-          color: isDark ? const Color(0xFF404040) : const Color(0xFF9CA3AF),
-          width: 1,
-        ) : null,
-      ),
-      child: Center(
-        child: Text(
-          '$number',
-          style: GoogleFonts.inter(
-            fontSize: 14,
-            fontWeight: isCompleted ? FontWeight.bold : FontWeight.w500,
-            color: isCompleted ? Colors.white : (isDark ? const Color(0xFFE5E7EB) : const Color(0xFF374151)),
+    final int index = number - 1;
+    final bool isCompleted = _selectedAnswers.containsKey(index);
+    final bool isCurrent = currentIndex == index;
+
+    return GestureDetector(
+      onTap: () => setState(() => currentIndex = index),
+      child: Container(
+        width: 36,
+        height: 36,
+        decoration: BoxDecoration(
+          color: isCompleted ? successColor : (isDark ? surfaceDark : Colors.white),
+          shape: BoxShape.circle,
+          boxShadow: isCompleted || isCurrent ? [const BoxShadow(color: Colors.black12, blurRadius: 4)] : null,
+          border: Border.all(
+            color: isCurrent 
+                ? (isDark ? Colors.white : primaryColor)
+                : (isCompleted ? Colors.transparent : (isDark ? const Color(0xFF404040) : const Color(0xFF9CA3AF))),
+            width: isCurrent ? 2 : 1,
+          ),
+        ),
+        child: Center(
+          child: Text(
+            '$number',
+            style: GoogleFonts.inter(
+              fontSize: 14,
+              fontWeight: (isCompleted || isCurrent) ? FontWeight.bold : FontWeight.w500,
+              color: isCompleted ? Colors.white : (isDark ? const Color(0xFFE5E7EB) : const Color(0xFF374151)),
+            ),
           ),
         ),
       ),
@@ -179,12 +230,12 @@ class _QuizAttemptScreenState extends State<QuizAttemptScreen> {
   }
 
   Widget _buildOption(String letter, String text, bool isDark) {
-    final isSelected = selectedOption == letter;
+    final isSelected = _selectedAnswers[currentIndex] == letter;
     
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: GestureDetector(
-        onTap: () => setState(() => selectedOption = letter),
+        onTap: () => setState(() => _selectedAnswers[currentIndex] = letter),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           width: double.infinity,
@@ -225,11 +276,11 @@ class _QuizAttemptScreenState extends State<QuizAttemptScreen> {
     );
   }
 
-  Widget _buildNavButton(String label, bool isDark) {
-    return Container(
+  Widget _buildNavButton(String label, bool isDark, VoidCallback onTap) {
+    return SizedBox(
       height: 48,
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: onTap,
         style: ElevatedButton.styleFrom(
           backgroundColor: isDark ? surfaceDark : surfaceLight,
           foregroundColor: isDark ? Colors.white : const Color(0xFF1F2937),
