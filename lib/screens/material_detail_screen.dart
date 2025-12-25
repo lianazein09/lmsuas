@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'material_viewer_screen.dart';
 import 'assignment_detail_screen.dart';
+import 'video_viewer_screen.dart';
 
 class MaterialDetailScreen extends StatefulWidget {
   final String? title;
@@ -299,7 +300,16 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
 
     return GestureDetector(
       onTap: () {
-        if (attachment['type'] == 'document' || attachment['title'].contains('Elemen')) {
+        if (attachment['title'].contains('Video')) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => VideoViewerScreen(
+                title: attachment['title'],
+              ),
+            ),
+          );
+        } else if (attachment['type'] == 'document' || attachment['title'].contains('Elemen')) {
           Navigator.push(
             context,
             MaterialPageRoute(
