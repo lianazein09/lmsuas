@@ -10,28 +10,28 @@ class QuizAttemptScreen extends StatefulWidget {
 }
 
 class _QuizAttemptScreenState extends State<QuizAttemptScreen> {
-  static const Color primaryColor = Color(0xFFC05052);
-  static const Color primaryLight = Color(0xFFE86A6C);
+  static const Color primaryColor = Color(0xFFB94A48);
+  static const Color secondaryColor = Color(0xFFED6A6A);
+  static const Color successColor = Color(0xFF4CD964);
   static const Color backgroundLight = Color(0xFFFFFFFF);
   static const Color backgroundDark = Color(0xFF121212);
-  static const Color surfaceLight = Color(0xFFF5F5F5);
-  static const Color surfaceDark = Color(0xFF1E1E1E);
+  static const Color surfaceLight = Color(0xFFF6F6F6);
+  static const Color surfaceDark = Color(0xFF2A2A2A);
 
-  int currentQuestion = 1;
-  String? selectedOption = 'A';
+  int currentQuestion = 2;
+  String? selectedOption = 'C';
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final bgColor = isDark ? backgroundDark : backgroundLight;
-    final textColor = isDark ? const Color(0xFFE5E5E5) : const Color(0xFF333333);
 
     return Scaffold(
       backgroundColor: bgColor,
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(80),
+        preferredSize: const Size.fromHeight(70),
         child: Container(
-          padding: const EdgeInsets.only(top: 40, bottom: 8, left: 24, right: 24),
+          padding: const EdgeInsets.only(top: 30, bottom: 8, left: 24, right: 24),
           decoration: const BoxDecoration(
             color: primaryColor,
             boxShadow: [
@@ -42,29 +42,31 @@ class _QuizAttemptScreenState extends State<QuizAttemptScreen> {
               ),
             ],
           ),
-          child: Row(
+          child: Stack(
+            alignment: Alignment.center,
             children: [
-              const Expanded(child: SizedBox()),
               Text(
                 widget.title,
                 style: GoogleFonts.poppins(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
+                  letterSpacing: 0.5,
                 ),
               ),
-              Expanded(
+              Positioned(
+                right: 0,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    const Icon(Icons.timer_outlined, color: Colors.white, size: 24),
+                    const Icon(Icons.timer_rounded, color: Colors.white, size: 24),
                     const SizedBox(width: 8),
                     Text(
                       '15 : 00',
                       style: GoogleFonts.poppins(
                         fontSize: 20,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.bold,
                         color: Colors.white,
+                        letterSpacing: 1.0,
                       ),
                     ),
                   ],
@@ -78,74 +80,46 @@ class _QuizAttemptScreenState extends State<QuizAttemptScreen> {
         children: [
           Expanded(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.all(24),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildQuestionGrid(isDark),
                   const SizedBox(height: 32),
-                  RichText(
-                    text: TextSpan(
-                      style: GoogleFonts.poppins(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: isDark ? Colors.white : Colors.black,
-                      ),
-                      children: [
-                        TextSpan(text: 'Soal Nomor $currentQuestion '),
-                        TextSpan(
-                          text: '/ 15',
-                          style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.normal,
-                            color: isDark ? Colors.grey[400] : Colors.grey[500],
-                          ),
-                        ),
-                      ],
+                  Text(
+                    'Soal Nomor $currentQuestion / 15',
+                    style: GoogleFonts.poppins(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: isDark ? Colors.white : Colors.black,
                     ),
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Radio button dapat digunakan untuk menentukan ?',
-                    style: GoogleFonts.poppins(
+                    'Dalam perancangan web yang baik, untuk teks yang menyampaikan isi konten digunakan font yang sama di setiap halaman, ini merupakan salah satu tujuan yaitu ?',
+                    style: GoogleFonts.inter(
                       fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: isDark ? const Color(0xFFE5E5E5) : const Color(0xFF111827),
-                      height: 1.5,
+                      color: isDark ? const Color(0xFFD1D1D1) : const Color(0xFF1F2937),
+                      height: 1.7,
                     ),
                   ),
-                  const SizedBox(height: 32),
-                  _buildOption('A', 'Jenis Kelamin', isDark),
-                  _buildOption('B', 'Alamat', isDark),
-                  _buildOption('C', 'Hobby', isDark),
-                  _buildOption('D', 'Riwayat Pendidikan', isDark),
-                  _buildOption('E', 'Umur', isDark),
-                  const SizedBox(height: 32),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: isDark ? surfaceDark : surfaceLight,
-                        foregroundColor: isDark ? Colors.white : const Color(0xFF1F2937),
-                        elevation: 2,
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
+                  const SizedBox(height: 40),
+                  _buildOption('A', 'Intergrasi', isDark),
+                  _buildOption('B', 'Standarisasi', isDark),
+                  _buildOption('C', 'Konsistensi', isDark),
+                  _buildOption('D', 'Koefensi', isDark),
+                  _buildOption('E', 'Koreksi', isDark),
+                  const SizedBox(height: 48),
+                  Row(
+                    gap: 16,
+                    children: [
+                      Expanded(
+                        child: _buildNavButton('Soal Sebelum nya.', isDark),
                       ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            'Soal Selanjutnya nya.',
-                            style: GoogleFonts.poppins(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
+                      Expanded(
+                        child: _buildNavButton('Soal Selanjut nya.', isDark),
                       ),
-                    ),
+                    ],
                   ),
                   const SizedBox(height: 32),
                 ],
@@ -161,15 +135,15 @@ class _QuizAttemptScreenState extends State<QuizAttemptScreen> {
     return Column(
       children: [
         Wrap(
-          spacing: 8,
-          runSpacing: 8,
+          spacing: 12,
+          runSpacing: 12,
           alignment: WrapAlignment.center,
           children: List.generate(10, (index) => _buildGridItem(index + 1, isDark)),
         ),
         const SizedBox(height: 8),
         Wrap(
-          spacing: 8,
-          runSpacing: 8,
+          spacing: 12,
+          runSpacing: 12,
           alignment: WrapAlignment.center,
           children: List.generate(5, (index) => _buildGridItem(index + 11, isDark)),
         ),
@@ -178,24 +152,26 @@ class _QuizAttemptScreenState extends State<QuizAttemptScreen> {
   }
 
   Widget _buildGridItem(int number, bool isDark) {
+    final bool isCompleted = number == 1; // Match HTML where 1 is success
     return Container(
-      width: 32,
-      height: 32,
+      width: 36,
+      height: 36,
       decoration: BoxDecoration(
-        color: isDark ? surfaceDark : Colors.white,
+        color: isCompleted ? successColor : (isDark ? surfaceDark : Colors.white),
         shape: BoxShape.circle,
-        border: Border.all(
-          color: isDark ? Colors.grey[700]! : Colors.grey[400]!,
+        boxShadow: isCompleted ? [const BoxShadow(color: Colors.black12, blurRadius: 4)] : null,
+        border: !isCompleted ? Border.all(
+          color: isDark ? const Color(0xFF404040) : const Color(0xFF9CA3AF),
           width: 1,
-        ),
+        ) : null,
       ),
       child: Center(
         child: Text(
           '$number',
-          style: GoogleFonts.poppins(
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
-            color: isDark ? Colors.white : Colors.black,
+          style: GoogleFonts.inter(
+            fontSize: 14,
+            fontWeight: isCompleted ? FontWeight.bold : FontWeight.w500,
+            color: isCompleted ? Colors.white : (isDark ? const Color(0xFFE5E7EB) : const Color(0xFF374151)),
           ),
         ),
       ),
@@ -209,46 +185,65 @@ class _QuizAttemptScreenState extends State<QuizAttemptScreen> {
       padding: const EdgeInsets.only(bottom: 16),
       child: GestureDetector(
         onTap: () => setState(() => selectedOption = letter),
-        child: Container(
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
           width: double.infinity,
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: isSelected ? primaryLight : (isDark ? surfaceDark : surfaceLight),
+            color: isSelected ? secondaryColor : (isDark ? surfaceDark : surfaceLight),
             borderRadius: BorderRadius.circular(12),
-            boxShadow: isSelected 
-              ? [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 6,
-                    offset: const Offset(0, 4),
-                  ),
-                ] : null,
-            border: isSelected 
-              ? Border.all(color: primaryLight, width: 2) 
-              : null,
+            boxShadow: isSelected ? [const BoxShadow(color: Colors.black12, blurRadius: 8, offset: Offset(0, 4))] : null,
+            border: isSelected ? Border.all(color: secondaryColor.withOpacity(0.5), width: 2) : null,
           ),
-          child: Row(
-            children: [
-              Text(
-                '$letter.',
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: isSelected ? Colors.black : (isDark ? Colors.grey[400] : Colors.grey[500]),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Text(
-                  text,
-                  style: GoogleFonts.poppins(
+          child: Transform.scale(
+            scale: isSelected ? 1.02 : 1.0,
+            child: Row(
+              children: [
+                Text(
+                  '$letter.   ',
+                  style: GoogleFonts.inter(
                     fontSize: 14,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.bold,
                     color: isSelected ? Colors.black : (isDark ? const Color(0xFFE5E5E5) : const Color(0xFF1F2937)),
                   ),
                 ),
-              ),
-            ],
+                Expanded(
+                  child: Text(
+                    text,
+                    style: GoogleFonts.inter(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: isSelected ? Colors.black : (isDark ? const Color(0xFFD1D1D1) : const Color(0xFF1F2937)),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNavButton(String label, bool isDark) {
+    return Container(
+      height: 48,
+      child: ElevatedButton(
+        onPressed: () {},
+        style: ElevatedButton.styleFrom(
+          backgroundColor: isDark ? surfaceDark : surfaceLight,
+          foregroundColor: isDark ? Colors.white : const Color(0xFF1F2937),
+          elevation: 1,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+        child: Text(
+          label,
+          textAlign: TextAlign.center,
+          style: GoogleFonts.inter(
+            fontSize: 13,
+            fontWeight: FontWeight.w500,
           ),
         ),
       ),
