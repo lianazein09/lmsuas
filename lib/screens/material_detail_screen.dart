@@ -275,8 +275,7 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
         itemBuilder: (context, index) {
           return _buildAttachmentCard(_attachments[index], isDark);
         },
-      ),
-    );
+      );
   }
 
   Widget _buildAttachmentCard(Map<String, dynamic> attachment, bool isDark) {

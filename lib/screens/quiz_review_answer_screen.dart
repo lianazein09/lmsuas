@@ -48,7 +48,7 @@ class QuizReviewAnswerScreen extends StatelessWidget {
               children: [
                 _buildSummaryCard(surfaceColor, isDark),
                 const SizedBox(height: 24),
-                _buildReviewList(isDark),
+                _buildReviewList(context, isDark),
                 const SizedBox(height: 100), // Space for bottom button
               ],
             ),
@@ -69,9 +69,9 @@ class QuizReviewAnswerScreen extends StatelessWidget {
                 ),
               ),
               child: Center(
-                child: SizedBox(
+                child: Container(
+                  constraints: const BoxConstraints(maxWidth: 320),
                   width: double.infinity,
-                  maxWidth: 320,
                   height: 52,
                   child: ElevatedButton(
                     onPressed: () {
@@ -160,7 +160,7 @@ class QuizReviewAnswerScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildReviewList(bool isDark) {
+  Widget _buildReviewList(BuildContext context, bool isDark) {
     final List<Map<String, String>> reviewData = [
       {
         'num': '1',
@@ -190,11 +190,11 @@ class QuizReviewAnswerScreen extends StatelessWidget {
     ];
 
     return Column(
-      children: reviewData.map((data) => _buildReviewItem(data, isDark)).toList(),
+      children: reviewData.map((data) => _buildReviewItem(context, data, isDark)).toList(),
     );
   }
 
-  Widget _buildReviewItem(Map<String, String> data, bool isDark) {
+  Widget _buildReviewItem(BuildContext context, Map<String, String> data, bool isDark) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 32),
       child: Row(
@@ -241,7 +241,7 @@ class QuizReviewAnswerScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.between,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Expanded(

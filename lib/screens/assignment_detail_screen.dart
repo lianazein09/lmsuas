@@ -70,9 +70,9 @@ class AssignmentDetailScreen extends StatelessWidget {
                 ),
               ),
               child: Center(
-                child: SizedBox(
+                child: Container(
+                  constraints: const BoxConstraints(maxWidth: 320),
                   width: double.infinity,
-                  maxWidth: 320,
                   height: 48,
                   child: ElevatedButton(
                     onPressed: () {
