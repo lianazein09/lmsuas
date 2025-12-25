@@ -21,38 +21,31 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
   // Attachments data
   final List<Map<String, dynamic>> _attachments = [
     {
-      'type': 'link',
-      'title': 'Zoom Meeting Synchronous',
+      'type': 'pdf',
+      'title': 'Pengenalan UI Design.pdf',
+      'size': '2.4 MB',
+      'time': 'Diupload 2 hari lalu',
       'completed': true,
     },
     {
-      'type': 'document',
-      'title': 'Pengantar User Interface Design',
+      'type': 'pptx',
+      'title': 'Prinsip Desain Visual.pptx',
+      'size': '5.1 MB',
+      'time': 'Diupload 3 hari lalu',
       'completed': false,
     },
     {
-      'type': 'document',
-      'title': 'Empat Teori Dasar Antarmuka Pengguna',
+      'type': 'pdf',
+      'title': 'Studi Kasus Antarmuka.pdf',
+      'size': '1.8 MB',
+      'time': 'Diupload 5 hari lalu',
       'completed': false,
     },
     {
-      'type': 'document',
-      'title': 'Empat Teori Dasar Antarmuka Pengguna',
-      'completed': true,
-    },
-    {
-      'type': 'video',
-      'title': 'User Interface Design for Beginner',
-      'completed': true,
-    },
-    {
-      'type': 'link',
-      'title': '20 Prinsip Desain',
-      'completed': true,
-    },
-    {
-      'type': 'link',
-      'title': 'Best Practice UI Design',
+      'type': 'docx',
+      'title': 'Panduan Tugas Besar.docx',
+      'size': '850 KB',
+      'time': 'Diupload 1 minggu lalu',
       'completed': true,
     },
   ];
@@ -256,90 +249,91 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
   }
 
   Widget _buildAttachmentCard(Map<String, dynamic> attachment, bool isDark) {
-    final cardColor = isDark ? Colors.grey[800] : Colors.white;
-    final textColor = isDark ? const Color(0xFFF9FAFB) : const Color(0xFF111827);
-    final iconBgColor = isDark ? Colors.grey[700] : Colors.grey[50];
-    final iconColor = isDark ? Colors.grey[300] : Colors.grey[700];
+    final cardColor = isDark ? const Color(0xFF1F2937).withOpacity(0.5) : const Color(0xFFF9FAFB);
+    final borderColor = isDark ? const Color(0xFF374151) : const Color(0xFFF3F4F6);
+    final textColor = isDark ? Colors.white : const Color(0xFF111827);
+    final secondaryTextColor = isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280);
 
-    // Get icon based on type
+    // Get icon and color based on type
     IconData icon;
-    double rotation = 0;
+    Color iconColor;
+    Color iconBgColor;
+
     switch (attachment['type']) {
-      case 'link':
-        icon = Icons.link;
-        rotation = 0.785; // 45 degrees in radians
+      case 'pdf':
+        icon = Icons.picture_as_pdf_rounded;
+        iconColor = const Color(0xFFEF4444); // Red-500
+        iconBgColor = isDark ? const Color(0xFF7F1D1D).withOpacity(0.2) : const Color(0xFFFEF2F2);
         break;
-      case 'video':
-        icon = Icons.videocam_outlined;
+      case 'pptx':
+        icon = Icons.slideshow_rounded;
+        iconColor = const Color(0xFFF97316); // Orange-500
+        iconBgColor = isDark ? const Color(0xFF7C2D12).withOpacity(0.2) : const Color(0xFFFFF7ED);
         break;
-      case 'document':
+      case 'docx':
+        icon = Icons.description_rounded;
+        iconColor = const Color(0xFF3B82F6); // Blue-500
+        iconBgColor = isDark ? const Color(0xFF1E3A8A).withOpacity(0.2) : const Color(0xFFEFF6FF);
+        break;
       default:
-        icon = Icons.description_outlined;
+        icon = Icons.insert_drive_file_rounded;
+        iconColor = secondaryTextColor;
+        iconBgColor = isDark ? Colors.grey[800]! : Colors.grey[100]!;
     }
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
+      margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: cardColor,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: isDark ? Colors.grey[700]! : Colors.transparent,
-          width: 1,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: borderColor),
       ),
       child: Row(
         children: [
           // Icon
           Container(
-            width: 40,
-            height: 40,
+            width: 48,
+            height: 48,
             decoration: BoxDecoration(
               color: iconBgColor,
-              shape: BoxShape.circle,
+              borderRadius: BorderRadius.circular(12),
             ),
-            child: Center(
-              child: Transform.rotate(
-                angle: rotation,
-                child: Icon(icon, color: iconColor, size: 20),
-              ),
-            ),
+            child: Icon(icon, color: iconColor, size: 24),
           ),
           const SizedBox(width: 16),
-          // Title
+          // Info
           Expanded(
-            child: Text(
-              attachment['title'],
-              style: GoogleFonts.inter(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: textColor,
-              ),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  attachment['title'],
+                  style: GoogleFonts.inter(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: textColor,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  '${attachment['size']} • ${attachment['time']}',
+                  style: GoogleFonts.inter(
+                    fontSize: 12,
+                    color: secondaryTextColor,
+                  ),
+                ),
+              ],
             ),
           ),
           const SizedBox(width: 8),
-          // Status
-          Container(
-            width: 24,
-            height: 24,
-            decoration: BoxDecoration(
-              color: attachment['completed'] ? accentGreen : (isDark ? Colors.grey[600] : Colors.grey[300]),
-              shape: BoxShape.circle,
-            ),
-            child: const Icon(
-              Icons.check_rounded,
-              color: Colors.white,
-              size: 14,
-            ),
+          // Download Icon
+          Icon(
+            Icons.download_rounded,
+            color: isDark ? const Color(0xFF6B7280) : const Color(0xFF9CA3AF),
+            size: 20,
           ),
         ],
       ),
