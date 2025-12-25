@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'material_viewer_screen.dart';
+import 'assignment_detail_screen.dart';
 
 class MaterialDetailScreen extends StatefulWidget {
   final String? title;
@@ -15,40 +17,41 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
   int _selectedTab = 0; // 0: Lampiran Materi, 1: Tugas dan Kuis
 
   // Colors from the HTML design
-  static const Color primaryColor = Color(0xFF13EC5B);
-  static const Color backgroundLight = Color(0xFFF6F8F6);
-  static const Color backgroundDark = Color(0xFF102216);
-  static const Color surfaceDark = Color(0xFF1A2E22);
-  static const Color accentGreen = Color(0xFF13EC5B);
+  static const Color primaryColor = Color(0xFF10B981);
+  static const Color backgroundLight = Color(0xFFFFFFFF);
+  static const Color backgroundDark = Color(0xFF18181B);
+  static const Color surfaceLight = Color(0xFFF3F4F6);
+  static const Color surfaceDark = Color(0xFF27272A);
+  static const Color borderLight = Color(0xFFF3F4F6);
+  static const Color borderDark = Color(0xFF3F3F46);
+  static const Color textSecondaryLight = Color(0xFF4B5563);
+  static const Color textSecondaryDark = Color(0xFFA1A1AA);
 
   // Attachments data
   final List<Map<String, dynamic>> _attachments = [
     {
-      'type': 'pdf',
-      'title': 'Pengenalan UI Design.pdf',
-      'size': '2.4 MB',
-      'time': 'Diupload 2 hari lalu',
+      'type': 'link',
+      'title': 'Zoom Meeting Syncronous',
       'completed': true,
     },
     {
-      'type': 'pptx',
-      'title': 'Prinsip Desain Visual.pptx',
-      'size': '5.1 MB',
-      'time': 'Diupload 3 hari lalu',
-      'completed': false,
+      'type': 'document',
+      'title': 'Elemen-elemen Antarmuka Pengguna',
+      'completed': true,
     },
     {
-      'type': 'pdf',
-      'title': 'Studi Kasus Antarmuka.pdf',
-      'size': '1.8 MB',
-      'time': 'Diupload 5 hari lalu',
-      'completed': false,
+      'type': 'document',
+      'title': 'UID Guidelines and Principles',
+      'completed': true,
     },
     {
-      'type': 'docx',
-      'title': 'Panduan Tugas Besar.docx',
-      'size': '850 KB',
-      'time': 'Diupload 1 minggu lalu',
+      'type': 'document',
+      'title': 'User Profile',
+      'completed': true,
+    },
+    {
+      'type': 'link',
+      'title': 'Principles of User Interface DesignURL',
       'completed': true,
     },
   ];
@@ -58,24 +61,19 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
     {
       'type': 'quiz',
       'title': 'Quiz Review 01',
-      'description': 'Review fundamental concepts of UI.',
-      'deadline': 'Deadline: Oct 24',
+      'description': 'Silahkan kerjakan kuis ini dalam waktu 15 menit sebagai nilai pertama komponen kuis. Jangan lupa klik tombol Submit Answer setelah menjawab seluruh pertanyaan.',
+      'deadline': "Kerjakan sebelum hari Jum'at, 26 Februari 2021 jam 23:59 WIB.",
       'completed': true,
+      'icon': Icons.chat_bubble_outline_rounded,
     },
     {
       'type': 'assignment',
       'title': 'Tugas 01 - UID Android Mobile Game',
-      'description': 'Design the main menu for a mobile game.',
-      'deadline': 'Deadline: Oct 30',
-      'completed': false,
-      'isUrgent': true,
-    },
-    {
-      'type': 'note',
-      'title': 'Tugas 02 - Wireframing',
-      'description': 'Create low-fidelity wireframes.',
-      'deadline': 'Deadline: Nov 05',
-      'completed': false,
+      'description': '1. Buatlah desain tampilan (antarmuka) pada aplikasi mobile game FPS (First Person Shooter) yang akan menjadi tugas pada mata kuliah Pemrograman Aplikasi Permainan.\n2. Desain yang dibuat harus melingkupi seluruh tampilan pada aplikasi/game, dari pertama kali aplikasi ............',
+      'deadline': '',
+      'completed': true,
+      'isGrayCheck': true,
+      'icon': Icons.assignment_outlined,
     },
   ];
 
@@ -83,34 +81,56 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final bgColor = isDark ? backgroundDark : backgroundLight;
-    final textColor = isDark ? Colors.white : const Color(0xFF0D1B12);
-    final secondaryTextColor = isDark ? const Color(0xFF9CA3AF) : const Color(0xFF0D1B12).withOpacity(0.8);
+    final textColor = isDark ? const Color(0xFFF9FAFB) : const Color(0xFF111827);
+    final secondaryTextColor = isDark ? textSecondaryDark : textSecondaryLight;
+    final borderColor = isDark ? borderDark : borderLight;
 
     return Scaffold(
-      backgroundColor: bgColor,
+      backgroundColor: isDark ? const Color(0xFF000000) : const Color(0xFFE5E7EB),
       body: Column(
         children: [
-          // App Bar
-          _buildAppBar(context, isDark, textColor),
+          // Handle Bar (Top notch)
+          Container(
+            padding: const EdgeInsets.only(top: 16, bottom: 8),
+            color: bgColor,
+            child: Center(
+              child: Container(
+                width: 48,
+                height: 6,
+                decoration: BoxDecoration(
+                  color: isDark ? const Color(0xFF3F3F46) : const Color(0xFFD1D5DB),
+                  borderRadius: BorderRadius.circular(3),
+                ),
+              ),
+            ),
+          ),
           // Scrollable Content
           Expanded(
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Headline Section
-                  _buildHeadline(textColor),
-                  // Description
-                  _buildDescription(secondaryTextColor),
-                  // Tab bar
-                  _buildTabBar(isDark, textColor),
-                  // Content
-                  _selectedTab == 0
-                      ? _buildAttachmentsList(isDark)
-                      : _buildTugasContent(isDark),
-                  const SizedBox(height: 48), // Bottom space
-                ],
+            child: Container(
+              color: bgColor,
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Column(
+                  children: [
+                    // Header Title
+                    _buildHeadline(textColor),
+                    // Description Section
+                    _buildDescription(secondaryTextColor),
+                    // Tab Bar
+                    _buildTabBar(isDark, textColor, borderColor),
+                    // Content Area
+                    Container(
+                      color: bgColor,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+                        child: _selectedTab == 0
+                            ? _buildAttachmentsList(isDark)
+                            : _buildTugasContent(isDark),
+                      ),
+                    ),
+                    const SizedBox(height: 32),
+                  ],
+                ),
               ),
             ),
           ),
@@ -119,81 +139,63 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
     );
   }
 
-  Widget _buildAppBar(BuildContext context, bool isDark, Color textColor) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(16, 48, 16, 8),
-      color: Colors.transparent,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          IconButton(
-            onPressed: () => Navigator.of(context).pop(),
-            icon: const Icon(Icons.arrow_back),
-            color: textColor,
-            style: IconButton.styleFrom(
-              padding: const EdgeInsets.all(8),
-            ),
-          ),
-          Text(
-            'Course Details',
-            style: GoogleFonts.lexend(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: textColor,
-            ),
-          ),
-          const SizedBox(width: 48), // Placeholder for symmetry
-        ],
-      ),
-    );
-  }
-
   Widget _buildHeadline(Color textColor) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
+      padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
       child: Text(
         widget.title ?? 'Konsep User Interface Design',
-        style: GoogleFonts.lexend(
-          fontSize: 28,
-          fontWeight: FontWeight.bold,
+        textAlign: TextAlign.center,
+        style: GoogleFonts.poppins(
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
           color: textColor,
-          height: 1.2,
-          letterSpacing: -0.5,
         ),
       ),
     );
   }
 
   Widget _buildDescription(Color secondaryTextColor) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final titleColor = isDark ? const Color(0xFFF4F4F5) : const Color(0xFF111827);
+
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
-      child: Text(
-        widget.description ?? 
-            'User Interface Design focuses on anticipating what users might need to do and ensuring that the interface has elements that are easy to access, understand, and use to facilitate those actions.',
-        style: GoogleFonts.lexend(
-          fontSize: 16,
-          color: secondaryTextColor,
-          height: 1.5,
-          fontWeight: FontWeight.w400,
-        ),
+      padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Deskripsi',
+            style: GoogleFonts.poppins(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: titleColor,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            widget.description ?? 
+                'Konsep dasar User Interface Design akan dipelajari bagaimana membangun sebuah Interaction Design pada antarmuka. Interaction ini sangat penting untuk aplikasi berkomunikasi dengan pengguna. Lalu dipelajari juga poin-poin penting pada interaction design seperti visibility, feedback, limitation, consistency dan affordance. Dan terakhir materi conceptual and perceptual design interaction akan memberikan gambaran bagaimana bentuk dari interaction.',
+            textAlign: TextAlign.justify,
+            style: GoogleFonts.poppins(
+              fontSize: 12,
+              color: secondaryTextColor,
+              height: 1.6,
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildTabBar(bool isDark, Color textColor) {
-    final bgColor = isDark ? const Color(0xFF374151).withValues(alpha: 0.5) : const Color(0xFFF9FAFB);
-    final inactiveColor = isDark ? Colors.grey[500] : Colors.grey[400];
+  Widget _buildTabBar(bool isDark, Color textColor, Color borderColor) {
+    final bgColor = isDark ? surfaceDark : surfaceLight;
+    final inactiveColor = isDark ? const Color(0xFFA1A1AA) : const Color(0xFF6B7280);
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.transparent,
-        border: Border(
-          bottom: BorderSide(
-            color: isDark ? const Color(0xFF374151) : const Color(0xFFCFE7D7),
-            width: 1,
-          ),
-        ),
+        color: bgColor,
       ),
+      padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Row(
         children: [
           // Lampiran Materi tab
@@ -237,22 +239,21 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
               Text(
                 label,
                 textAlign: TextAlign.center,
-                style: GoogleFonts.lexend(
+                style: GoogleFonts.poppins(
                   fontSize: 14,
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
                   color: isSelected ? textColor : inactiveColor,
                 ),
               ),
               if (isSelected)
                 Positioned(
-                  bottom: -16,
+                  bottom: -4,
                   child: Container(
-                    width: double.infinity,
+                    width: 120, // Adjusted width for better look
                     height: 3,
-                    margin: const EdgeInsets.symmetric(horizontal: 20),
                     decoration: BoxDecoration(
-                      color: isDark ? Colors.white : primaryColor,
-                      borderRadius: BorderRadius.circular(2),
+                      color: isDark ? Colors.white : const Color(0xFF111827),
+                      borderRadius: BorderRadius.circular(1.5),
                     ),
                   ),
                 ),
@@ -264,10 +265,8 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
   }
 
   Widget _buildAttachmentsList(bool isDark) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      child: ListView.builder(
-        padding: EdgeInsets.zero,
+    return ListView.builder(
+      padding: EdgeInsets.zero,
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         itemCount: _attachments.length,
@@ -279,276 +278,230 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
   }
 
   Widget _buildAttachmentCard(Map<String, dynamic> attachment, bool isDark) {
-    final cardColor = isDark ? const Color(0xFF1F2937).withOpacity(0.5) : const Color(0xFFF9FAFB);
+    final cardBg = isDark ? const Color(0xFF1F2937).withOpacity(0.5) : const Color(0xFFF9FAFB);
     final borderColor = isDark ? const Color(0xFF374151) : const Color(0xFFF3F4F6);
     final textColor = isDark ? Colors.white : const Color(0xFF111827);
     final secondaryTextColor = isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280);
 
     // Get icon and color based on type
     IconData icon;
-    Color iconColor;
-    Color iconBgColor;
+    double rotation = 0;
 
     switch (attachment['type']) {
-      case 'pdf':
-        icon = Icons.picture_as_pdf_rounded;
-        iconColor = const Color(0xFFEF4444); // Red-500
-        iconBgColor = isDark ? const Color(0xFF7F1D1D).withOpacity(0.2) : const Color(0xFFFEF2F2);
+      case 'link':
+        icon = Icons.link_rounded;
+        rotation = 0.785; // 45 degrees
         break;
-      case 'pptx':
-        icon = Icons.slideshow_rounded;
-        iconColor = const Color(0xFFF97316); // Orange-500
-        iconBgColor = isDark ? const Color(0xFF7C2D12).withOpacity(0.2) : const Color(0xFFFFF7ED);
-        break;
-      case 'docx':
-        icon = Icons.description_rounded;
-        iconColor = const Color(0xFF3B82F6); // Blue-500
-        iconBgColor = isDark ? const Color(0xFF1E3A8A).withOpacity(0.2) : const Color(0xFFEFF6FF);
-        break;
+      case 'document':
       default:
-        icon = Icons.insert_drive_file_rounded;
-        iconColor = secondaryTextColor;
-        iconBgColor = isDark ? Colors.grey[800]! : Colors.grey[100]!;
+        icon = Icons.description_rounded;
     }
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: isDark ? surfaceDark : Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: borderColor),
-        shadows: isDark ? null : [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          // Icon
-          Container(
-            width: 48,
-            height: 48,
-            decoration: BoxDecoration(
-              color: iconBgColor,
-              borderRadius: BorderRadius.circular(12),
+    return GestureDetector(
+      onTap: () {
+        if (attachment['type'] == 'document' || attachment['title'].contains('Elemen')) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const MaterialViewerScreen(
+                title: 'Pengantar User Interface Design',
+              ),
             ),
-            child: Icon(icon, color: iconColor, size: 24),
-          ),
-          const SizedBox(width: 16),
-          // Info
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  attachment['title'],
-                  style: GoogleFonts.lexend(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                    color: textColor,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  '${attachment['size']} • ${attachment['time']}',
-                  style: GoogleFonts.lexend(
-                    fontSize: 12,
-                    color: secondaryTextColor,
-                  ),
-                ),
-              ],
+          );
+        }
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 16),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: cardBg,
+          borderRadius: BorderRadius.circular(24), // rounded-[1.5rem]
+          border: Border.all(color: borderColor),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 20,
+              spreadRadius: -2,
+              offset: const Offset(0, 4),
             ),
-          ),
-          const SizedBox(width: 8),
-          // Download Icon
-          Icon(
-            Icons.download_rounded,
-            color: isDark ? const Color(0xFF6B7280) : const Color(0xFF9CA3AF),
-            size: 20,
-          ),
-        ],
+          ],
+        ),
+        child: Row(
+          children: [
+            // Icon
+            Container(
+              padding: const EdgeInsets.all(4),
+              child: Transform.rotate(
+                angle: rotation,
+                child: Icon(
+                  icon,
+                  color: isDark ? const Color(0xFFD4D4D8) : const Color(0xFF374151),
+                  size: 24,
+                ),
+              ),
+            ),
+            const SizedBox(width: 16),
+            // Title
+            Expanded(
+              child: Text(
+                attachment['title'],
+                style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                  color: textColor,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            const SizedBox(width: 16),
+            // Status Check
+            Icon(
+              Icons.check_circle_rounded,
+              color: primaryColor,
+              size: 24,
+            ),
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildTugasContent(bool isDark) {
-    if (_assignmentsList.isEmpty) {
-      return Container(
-        width: double.infinity,
-        padding: const EdgeInsets.fromLTRB(32, 48, 32, 80),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Illustration from HTML
-            Container(
-              width: 256,
-              height: 256,
-              margin: const EdgeInsets.only(bottom: 24),
-              child: Image.network(
-                'https://lh3.googleusercontent.com/aida-public/AB6AXuBXtzoT9TSVNsyoAS2wd7onrU0KjfS_70pKlCHa7brimZN9Qmo0urPM2NewUqEXO_7keFyKg5rQKny1wDbfw17qjTwo3lTvQtFHKWN-_EfmLaqSQs_8UF-UxXjotMk9pduceMrYLi8J0XfAixSFYSdHzqBEkpLTZJT6Z3Qrl5oGyulfOObeA8nQwMb4zMfCfpHvijlaT8uLwQytRB44rLMdfqBgFrh2Ph54dqfjI81yoZdB_ctBHiK1bx2x57AcIBoa2rmkv1JiRfmI',
-                fit: BoxFit.contain,
-                errorBuilder: (_, __, ___) => Icon(
-                  Icons.assignment_outlined,
-                  size: 64,
-                  color: isDark ? Colors.grey[600] : Colors.grey[400],
-                ),
-              ),
-            ),
-            Text(
-              'Tidak Ada Tugas Dan Kuis Hari Ini',
-              textAlign: TextAlign.center,
-              style: GoogleFonts.lexend(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                color: isDark ? Colors.white : const Color(0xFF111827),
-              ),
-            ),
-          ],
-        ),
-      );
-    }
-
-    return Container(
-      padding: const EdgeInsets.all(20),
-      child: ListView.builder(
-        padding: EdgeInsets.zero,
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: _assignmentsList.length,
-        itemBuilder: (context, index) {
-          return _buildAssignmentCardItem(_assignmentsList[index], isDark);
-        },
-      ),
+    return ListView.builder(
+      padding: EdgeInsets.zero,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: _assignmentsList.length,
+      itemBuilder: (context, index) {
+        return _buildAssignmentCardItem(_assignmentsList[index], isDark);
+      },
     );
   }
 
   Widget _buildAssignmentCardItem(Map<String, dynamic> assignment, bool isDark) {
-    final textColor = isDark ? Colors.white : const Color(0xFF0D1B12);
-    final secondaryTextColor = isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280);
+    final textColor = isDark ? const Color(0xFFF9FAFB) : const Color(0xFF111827);
+    final secondaryTextColor = isDark ? textSecondaryDark : textSecondaryLight;
+    final cardBg = isDark ? surfaceDark : Colors.white;
     final isCompleted = assignment['completed'] == true;
-    final isUrgent = assignment['isUrgent'] == true;
+    final isGrayCheck = assignment['isGrayCheck'] == true;
+    final borderColor = isDark ? borderDark : const Color(0xFFE5E7EB);
 
-    // Icon based on type
-    IconData icon;
-    Color iconBgColor;
-    Color iconColor;
-
-    switch (assignment['type']) {
-      case 'quiz':
-        icon = Icons.quiz_rounded;
-        iconColor = primaryColor;
-        iconBgColor = isDark ? const Color(0xFF1E3A29) : const Color(0xFFE7F3EB);
-        break;
-      case 'assignment':
-        icon = Icons.assignment_rounded;
-        iconColor = isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280);
-        iconBgColor = isDark ? const Color(0xFF1F2937) : const Color(0xFFF3F4F6);
-        break;
-      case 'note':
-        icon = Icons.sticky_note_2_rounded;
-        iconColor = isDark ? const Color(0xFF9CA3AF) : const Color(0xFF6B7280);
-        iconBgColor = isDark ? const Color(0xFF1F2937) : const Color(0xFFF3F4F6);
-        break;
-      default:
-        icon = Icons.assignment_rounded;
-        iconColor = primaryColor;
-        iconBgColor = isDark ? const Color(0xFF1E3A29) : const Color(0xFFE7F3EB);
-    }
-
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: isDark ? surfaceDark : Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: isDark ? const Color(0xFF1F2937) : const Color(0xFFF3F4F6)),
-        shadows: isDark ? null : [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Icon
-          Container(
-            width: 48,
-            height: 48,
-            decoration: BoxDecoration(
-              color: iconBgColor,
-              borderRadius: BorderRadius.circular(10),
+    return GestureDetector(
+      onTap: () {
+        if (assignment['type'] == 'assignment') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AssignmentDetailScreen(
+                title: assignment['title'],
+              ),
             ),
-            child: Icon(icon, color: iconColor, size: 24),
-          ),
-          const SizedBox(width: 16),
-          // Info
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  assignment['title'],
-                  style: GoogleFonts.lexend(
-                    fontSize: 16,
-                    fontWeight: FontWeight.semibold,
+          );
+        }
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 16),
+        decoration: BoxDecoration(
+          color: cardBg,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: borderColor),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 6,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Icon Side
+              Container(
+                width: 64,
+                decoration: BoxDecoration(
+                  color: cardBg,
+                  border: Border(
+                    right: BorderSide(color: isDark ? const Color(0xFF4B5563) : const Color(0xFFF3F4F6)),
+                  ),
+                ),
+                child: Center(
+                  child: Icon(
+                    assignment['icon'] as IconData,
                     color: textColor,
+                    size: 24,
                   ),
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  assignment['description'],
-                  style: GoogleFonts.lexend(
-                    fontSize: 14,
-                    color: secondaryTextColor,
-                    height: 1.3,
+              ),
+              // Content Side
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Title and Check
+                      Container(
+                        padding: const EdgeInsets.only(bottom: 8),
+                        margin: const EdgeInsets.only(bottom: 8),
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(color: isDark ? const Color(0xFF4B5563) : const Color(0xFFF3F4F6)),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                assignment['title'],
+                                style: GoogleFonts.poppins(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  color: textColor,
+                                ),
+                              ),
+                            ),
+                            if (isCompleted)
+                              Icon(
+                                Icons.check_circle_outline_rounded,
+                                color: isGrayCheck 
+                                    ? (isDark ? const Color(0xFF6B7280) : const Color(0xFF9CA3AF)) 
+                                    : primaryColor,
+                                size: 20,
+                              ),
+                          ],
+                        ),
+                      ),
+                      // Description
+                      Text(
+                        assignment['description'],
+                        style: GoogleFonts.poppins(
+                          fontSize: 12,
+                          color: secondaryTextColor,
+                          height: 1.5,
+                        ),
+                      ),
+                      if (assignment['deadline'].isNotEmpty) ...[
+                        const SizedBox(height: 8),
+                        Text(
+                          assignment['deadline'],
+                          style: GoogleFonts.poppins(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: isDark ? const Color(0xFFE5E7EB) : const Color(0xFF111827),
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  assignment['deadline'],
-                  style: GoogleFonts.lexend(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                    color: isUrgent ? Colors.red[400] : (isCompleted ? primaryColor : secondaryTextColor),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-          const SizedBox(width: 8),
-          // Status
-          if (isCompleted)
-            Container(
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                color: primaryColor.withOpacity(0.1),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(Icons.check_circle_rounded, color: primaryColor, size: 24),
-            )
-          else
-            Container(
-              width: 24,
-              height: 24,
-              margin: const EdgeInsets.only(top: 4, right: 4),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: isDark ? const Color(0xFF374151) : const Color(0xFFD1D5DB),
-                  width: 2,
-                ),
-              ),
-            ),
-        ],
+        ),
       ),
     );
   }
