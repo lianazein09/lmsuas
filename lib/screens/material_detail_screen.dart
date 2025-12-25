@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'material_viewer_screen.dart';
 import 'assignment_detail_screen.dart';
 import 'video_viewer_screen.dart';
+import 'quiz_review_screen.dart';
 
 class MaterialDetailScreen extends StatefulWidget {
   final String? title;
@@ -399,7 +400,16 @@ class _MaterialDetailScreenState extends State<MaterialDetailScreen> {
 
     return GestureDetector(
       onTap: () {
-        if (assignment['type'] == 'assignment') {
+        if (assignment['type'] == 'quiz') {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => QuizReviewScreen(
+                title: assignment['title'],
+              ),
+            ),
+          );
+        } else if (assignment['type'] == 'assignment') {
           Navigator.push(
             context,
             MaterialPageRoute(
