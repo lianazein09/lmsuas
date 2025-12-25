@@ -10,54 +10,25 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen>
-    with TickerProviderStateMixin {
-  late AnimationController _fadeController;
-  late AnimationController _slideController;
+    with SingleTickerProviderStateMixin {
   late AnimationController _pulseController;
-  late Animation<double> _fadeAnimation;
-  late Animation<Offset> _slideAnimation;
+  late Animation<double> _pulseAnimation;
 
-  // Primary color sampled from the red background
-  static const Color primaryColor = Color(0xFFB84A4B);
+  static const Color backgroundLight = Color(0xFFC0494A);
+  static const Color backgroundDark = Color(0xFF8B3031);
 
   @override
   void initState() {
     super.initState();
 
-    // Fade-in animation for logo (1.2s duration)
-    _fadeController = AnimationController(
-      duration: const Duration(milliseconds: 1200),
-      vsync: this,
-    );
-    _fadeAnimation = CurvedAnimation(
-      parent: _fadeController,
-      curve: Curves.easeOut,
-    );
-
-    // Slide-up animation for text (0.8s duration, 0.5s delay)
-    _slideController = AnimationController(
-      duration: const Duration(milliseconds: 800),
-      vsync: this,
-    );
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.5),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _slideController,
-      curve: Curves.easeOut,
-    ));
-
-    // Pulse animation for loading dots (3s infinite)
     _pulseController = AnimationController(
-      duration: const Duration(milliseconds: 3000),
+      duration: const Duration(milliseconds: 2000),
       vsync: this,
-    )..repeat();
+    )..repeat(reverse: true);
 
-    // Start animations
-    _fadeController.forward();
-    Future.delayed(const Duration(milliseconds: 500), () {
-      _slideController.forward();
-    });
+    _pulseAnimation = Tween<double>(begin: 0.9, end: 1.05).animate(
+      CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
+    );
 
     // Navigate to login screen after 3 seconds
     Future.delayed(const Duration(milliseconds: 3000), () {
@@ -71,92 +42,54 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   void dispose() {
-    _fadeController.dispose();
-    _slideController.dispose();
     _pulseController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final bgColor = isDark ? backgroundDark : backgroundLight;
+
     return Scaffold(
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: const BoxDecoration(
-          color: primaryColor,
-        ),
-        child: Stack(
-          children: [
-            // Gradient overlay
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.transparent,
-                    Colors.black.withValues(alpha: 0.1),
-                  ],
-                ),
-              ),
-            ),
-            // Main content
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // Logo with fade-in animation
-                    FadeTransition(
-                      opacity: _fadeAnimation,
-                      child: _buildLogo(),
-                    ),
-                    const SizedBox(height: 24),
-                    // Text with slide-up animation
-                    SlideTransition(
-                      position: _slideAnimation,
-                      child: FadeTransition(
-                        opacity: _slideController,
-                        child: Text(
-                          'Learning Management System',
-                          style: GoogleFonts.poppins(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                            letterSpacing: 1.2,
+        color: bgColor,
+        child: Center(
+          child: ScaleTransition(
+            scale: _pulseAnimation,
+            child: FadeTransition(
+              opacity: _pulseAnimation,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _buildLogo(),
+                  const SizedBox(height: 24),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 32),
+                    child: Text(
+                      'LEARNING MANAGEMENT SYSTEM',
+                      style: GoogleFonts.nunito(
+                        color: Colors.white,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 2.0,
+                        shadows: [
+                          const Shadow(
+                            color: Colors.black26,
+                            blurRadius: 4,
+                            offset: Offset(0, 2),
                           ),
-                          textAlign: TextAlign.center,
-                        ),
+                        ],
                       ),
+                      textAlign: TextAlign.center,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-            // Loading dots at bottom
-            Positioned(
-              bottom: 48,
-              left: 0,
-              right: 0,
-              child: ListenableBuilder(
-                listenable: _pulseController,
-                builder: (context, child) {
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _buildDot(0.4),
-                      const SizedBox(width: 8),
-                      _buildDot(0.7),
-                      const SizedBox(width: 8),
-                      _buildDot(0.4),
-                    ],
-                  );
-                },
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -164,112 +97,72 @@ class _SplashScreenState extends State<SplashScreen>
 
   Widget _buildLogo() {
     return SizedBox(
-      width: 200,
-      height: 80,
+      width: 280,
+      height: 105,
       child: CustomPaint(
         painter: LmsLogoPainter(),
       ),
     );
   }
-
-  Widget _buildDot(double opacity) {
-    return ListenableBuilder(
-      listenable: _pulseController,
-      builder: (context, child) {
-        // Create pulsing effect
-        double animValue = _pulseController.value;
-        double dotOpacity = opacity + (0.3 * (0.5 + 0.5 * 
-            (1 - (2 * animValue - 1).abs())));
-        return Container(
-          width: 8,
-          height: 8,
-          decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: dotOpacity.clamp(0.0, 1.0)),
-            shape: BoxShape.circle,
-          ),
-        );
-      },
-    );
-  }
 }
 
-// Custom painter to draw the LMS logo
 class LmsLogoPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    final strokePaint = Paint()
+    final paint = Paint()
       ..color = Colors.white
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.5
+      ..strokeWidth = 14 // Relative to viewBox 400x150
       ..strokeCap = StrokeCap.round
       ..strokeJoin = StrokeJoin.round;
 
-    final fillPaint = Paint()
-      ..color = Colors.white.withValues(alpha: 0.9)
-      ..style = PaintingStyle.fill;
-
-    // Scale factor based on original viewBox (200x80)
-    double scaleX = size.width / 200;
-    double scaleY = size.height / 80;
-
+    double scale = size.width / 400;
     canvas.save();
-    canvas.scale(scaleX, scaleY);
+    canvas.scale(scale);
 
-    // Top decorative ribbon/book pages
-    Path ribbonPath = Path();
-    ribbonPath.moveTo(100, 15);
-    ribbonPath.cubicTo(115, 10, 130, 15, 145, 18);
-    ribbonPath.lineTo(145, 20);
-    ribbonPath.cubicTo(130, 17, 115, 12, 100, 17);
-    ribbonPath.cubicTo(85, 12, 70, 17, 55, 20);
-    ribbonPath.lineTo(55, 18);
-    ribbonPath.cubicTo(70, 15, 85, 10, 100, 15);
-    ribbonPath.close();
-    canvas.drawPath(ribbonPath, fillPaint);
+    // C
+    Path cPath = Path();
+    cPath.moveTo(70, 100);
+    cPath.cubicTo(40, 100, 20, 80, 20, 60);
+    cPath.cubicTo(20, 40, 40, 20, 70, 20);
+    cPath.lineTo(90, 20);
+    canvas.drawPath(cPath, paint);
 
-    // Letter "L" - arc shape
+    // e (1)
+    Path e1Path = Path();
+    e1Path.moveTo(120, 60);
+    e1Path.cubicTo(110, 40, 130, 20, 150, 20);
+    e1Path.cubicTo(170, 20, 180, 40, 180, 50);
+    e1Path.cubicTo(180, 70, 120, 70, 120, 70);
+    e1Path.cubicTo(120, 90, 140, 100, 160, 100);
+    canvas.drawPath(e1Path, paint);
+
+    // L
     Path lPath = Path();
-    lPath.moveTo(40, 50);
-    lPath.arcToPoint(
-      const Offset(55, 35),
-      radius: const Radius.circular(15),
-      clockwise: true,
-    );
-    canvas.drawPath(lPath, strokePaint);
+    lPath.moveTo(190, 20);
+    lPath.lineTo(190, 80);
+    lPath.cubicTo(190, 95, 210, 100, 220, 90);
+    lPath.lineTo(240, 60);
+    canvas.drawPath(lPath, paint);
 
-    // Letter "M" - stylized
-    Path mPath = Path();
-    mPath.moveTo(55, 45);
-    mPath.cubicTo(65, 45, 70, 55, 80, 40);
-    mPath.lineTo(80, 25);
-    mPath.moveTo(80, 25);
-    mPath.lineTo(80, 50);
-    canvas.drawPath(mPath, strokePaint);
+    // O
+    canvas.drawCircle(const Offset(270, 70), 30, paint);
 
-    // Letter "S" - infinity-like shape
-    Path sPath1 = Path();
-    sPath1.addOval(Rect.fromCircle(center: const Offset(107, 42), radius: 12));
-    canvas.drawPath(sPath1, strokePaint);
+    // Hat
+    Path hatPath = Path();
+    hatPath.moveTo(240, 10);
+    hatPath.lineTo(290, 15);
+    hatPath.lineTo(340, 10);
+    canvas.drawPath(hatPath, paint);
 
-    // Second part of S - stylized curve
-    Path sPath2 = Path();
-    sPath2.moveTo(130, 42);
-    sPath2.cubicTo(125, 42, 125, 55, 135, 55);
-    sPath2.cubicTo(150, 55, 155, 35, 135, 35);
-    sPath2.cubicTo(125, 35, 130, 42, 145, 42);
-    canvas.drawPath(sPath2, strokePaint);
-
-    // Bottom underline decoration
-    final underlinePaint = Paint()
-      ..color = Colors.white.withValues(alpha: 0.6)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.5
-      ..strokeCap = StrokeCap.round;
-
-    Path underlinePath = Path();
-    underlinePath.moveTo(55, 58);
-    underlinePath.quadraticBezierTo(100, 65, 145, 58);
-    canvas.drawPath(underlinePath, underlinePaint);
+    // e (2)
+    Path e2Path = Path();
+    e2Path.moveTo(330, 60);
+    e2Path.cubicTo(320, 40, 340, 20, 360, 20);
+    e2Path.cubicTo(380, 20, 390, 40, 390, 50);
+    e2Path.cubicTo(390, 70, 330, 70, 330, 70);
+    e2Path.cubicTo(330, 90, 350, 100, 370, 100);
+    canvas.drawPath(e2Path, paint);
 
     canvas.restore();
   }
