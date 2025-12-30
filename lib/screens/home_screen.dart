@@ -88,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 4),
               Text(
-                'DANDY CANDRA\nPRATAMA',
+                'LIANA SAFITRI\nZEIN',
                 style: GoogleFonts.poppins(
                   color: Colors.white,
                   fontSize: 20,

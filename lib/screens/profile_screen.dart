@@ -21,8 +21,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   // User data (in real app, this would come from an API)
   final Map<String, String> _userData = {
-    'name': 'Dandy Candra Pratama',
-    'email': 'dandycandra@365.telkomuniversity.ac.id',
+    'name': 'Liana Safitri Zein',
+    'email': 'lianazein@gmail.com',
     'programStudi': 'D4 Teknologi Rekayasa Multimedia',
     'fakultas': 'FIT',
     'firstAccess': 'Monday, 7 September 2020, 9:27 AM',
@@ -409,9 +409,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   // Text controllers for edit profile form
-  final _firstNameController = TextEditingController(text: 'Dandy');
-  final _lastNameController = TextEditingController(text: 'Candra Pratama');
-  final _emailEditController = TextEditingController(text: 'dandy.cp@example.com');
+  final _firstNameController = TextEditingController(text: 'Liana');
+  final _lastNameController = TextEditingController(text: 'Zein');
+  final _emailEditController = TextEditingController(text: 'lianazein@gmail.com');
   final _countryController = TextEditingController(text: 'Indonesia');
   final _descriptionController = TextEditingController();
 
@@ -430,7 +430,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _buildFormField(
             label: 'Nama Pertama',
             controller: _firstNameController,
-            placeholder: 'Dandy',
+            placeholder: 'Liana',
             isDark: isDark,
             cardColor: cardColor,
             borderColor: borderColor,
@@ -442,7 +442,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _buildFormField(
             label: 'Nama Terakhir',
             controller: _lastNameController,
-            placeholder: 'Candra Pratama',
+            placeholder: 'Zein',
             isDark: isDark,
             cardColor: cardColor,
             borderColor: borderColor,
@@ -454,7 +454,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _buildFormField(
             label: 'E-mail Address',
             controller: _emailEditController,
-            placeholder: 'dandy.cp@example.com',
+            placeholder: 'lianazein@gmail.com',
             isDark: isDark,
             cardColor: cardColor,
             borderColor: borderColor,
